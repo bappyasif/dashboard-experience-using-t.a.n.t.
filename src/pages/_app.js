@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
     <SessionProvider session={pageProps.session}>
       <DashboardContextProvider>
         <QueryClientProvider client={clientQuery}>
-          <div className='flex gap-9'>
+          <div className='flex gap-9 w-full'>
             <Navbar />
             <Component {...pageProps} />
           </div>

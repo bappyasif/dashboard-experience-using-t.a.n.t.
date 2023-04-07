@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
-import { AiOutlineSearch, AiOutlineLogin, AiOutlineLogout, AiOutlineDashboard, AiOutlineHome, AiOutlineRise, AiOutlineDeploymentUnit } from "react-icons/ai"
+import { AiOutlineSearch, AiOutlineLogin, AiOutlineLogout, AiOutlineDashboard, AiOutlineHome, AiOutlineRise, AiOutlineDeploymentUnit, AiOutlineRadarChart } from "react-icons/ai"
 
 export const Navbar = () => {
     const { status } = useSession();
@@ -20,8 +20,7 @@ const RenderNav = ({ item }) => {
     const { status } = useSession()
 
     return (
-
-        status === "unauthenticated" && name !== "Top Tracks" && name !== "Playlists" && name !== "Dashboard" && name !== "Sign Out"
+        status === "unauthenticated" && name !== "Top Tracks" && name !== "Playlists" && name !== "Dashboard" && name !== "Sign Out" && name !== "Detect Song"
             ||
             status === "authenticated" && name !== "Sign In"
             ?
@@ -38,6 +37,11 @@ const navs = [
         name: "Home",
         path: "/",
         icon: <AiOutlineHome />
+    },
+    {
+        name: "Detect Song",
+        path: "/detect-song",
+        icon: <AiOutlineRadarChart />
     },
     {
         name: "Top Tracks",

@@ -7,6 +7,7 @@ export const DashboardContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(dashboardReducer, initialState)
 
     const handleInitaialUserPlaylist = data => {
+        console.log(data, "initial playlist!!")
         dispatch({
             type: ACTIONS.UPDATE_PLAYLIST,
             payload: {
