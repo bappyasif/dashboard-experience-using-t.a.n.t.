@@ -15,7 +15,7 @@ export const DashboardContextProvider = ({ children }) => {
         })
     }
 
-    const handleAddNewPlaylists = (newData, userId) => {
+    const handleAddNewPlaylist = (newData, userId) => {
         const userPlaylists = state.playlists?.find(item => item.userId == userId)
 
         const chk = userPlaylists?.lists.findIndex(item => item.name === newData?.name)
@@ -30,17 +30,9 @@ export const DashboardContextProvider = ({ children }) => {
             if (chk === -1 && newList?.length) {
                 updatedList = state.playlists.concat({ userId: userId, lists: newList })
             }
-            // setPlaylists(prev => (chk === -1 && newList?.length) ? [...prev, { userId: userId, lists: newList }] : [...prev])
-            // setPlaylists(prev => chk === -1 ? [...prev, {userId: userId, lists: newList}] : [...prev])
         }
 
-        // dispatch({
-        //     type: ACTIONS.UPDATE_PLAYLIST,
-        //     payload: {
-        //         playlists: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList)
+        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }
 
     const handleRemoveUserPlaylist = (userId, playlistName) => {
@@ -51,13 +43,7 @@ export const DashboardContextProvider = ({ children }) => {
             return item
         })
 
-        // dispatch({
-        //     type: ACTIONS.UPDATE_PLAYLIST,
-        //     payload: {
-        //         playlists: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList)
+        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }
 
     const handleAddToPlaylist = (userId, playlistName, trackId) => {
@@ -78,13 +64,7 @@ export const DashboardContextProvider = ({ children }) => {
             return prev[0]
         })
 
-        // dispatch({
-        //     type: ACTIONS.UPDATE_PLAYLIST,
-        //     payload: {
-        //         playlists: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList)
+        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }
 
     const handleRemoveFromPlaylist = (userId, playlistName, trackId) => {
@@ -102,47 +82,26 @@ export const DashboardContextProvider = ({ children }) => {
             return prev[0]
         })
 
-        // dispatch({
-        //     type: ACTIONS.UPDATE_PLAYLIST,
-        //     payload: {
-        //         playlists: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList)
+        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }
 
     const handleSongRelatedTracks = (data, trackId) => {
         const updatedList = data?.length ? state.relatedTracks.concat({ data: data, key: trackId }) : state.relatedTracks
 
-        // dispatch({
-        //     type: ACTIONS.ADD_RELATED_TRACKS_FOR_SPECIFIC_SONG,
-        //     payload: {
-        //         relatedTracks: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.ADD_RELATED_TRACKS_FOR_SPECIFIC_SONG, updatedList)
+        dispatchFunction(ACTIONS.ADD_RELATED_TRACKS_FOR_SPECIFIC_SONG, updatedList, "relatedTracks")
     }
 
     const handleUpdateCountryName = (value) => {
         const updatedName = value ? value : state.country
-        // dispatch({
-        //     type: ACTIONS.UPDATE_COUNTRY,
-        //     payload: {
-        //         country: upatedName
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_COUNTRY, updatedName)
+
+        dispatchFunction(ACTIONS.UPDATE_COUNTRY, updatedName, "country")
     }
 
     const handleCountrySpecificTrends = (data, countryCode) => {
-        const updatedList = data ? state.topTracks.concat({ data, countryCode }) : state.topTracks
-        // dispatch({
-        //     type: ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY,
-        //     payload: {
-        //         topTracks: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY, updatedList)
+        // console.log(data, countryCode, "<><><><>", state.topTracks, state)
+        const updatedList = data ? (state.topTracks || []).concat({ data, countryCode }) : state.topTracks
+
+        dispatchFunction(ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY, updatedList, "topTracks")
     }
 
     const handleSearchedInfoData = (type, query, data) => {
@@ -150,27 +109,21 @@ export const DashboardContextProvider = ({ children }) => {
         // console.log(checkIfExistAlready, "checkIfExistAlready!!><><")
         const updatedList = checkIfExistAlready === -1 ? state.searchedData.concat({ type, query, data }) : state.searchedData
 
-        // dispatch({
-        //     type: ACTIONS.UPDATE_SEARCHED_INFO_DATA,
-        //     payload: {
-        //         searchedData: updatedList
-        //     }
-        // })
-        dispatchFunction(ACTIONS.UPDATE_SEARCHED_INFO_DATA, updatedList)
+        dispatchFunction(ACTIONS.UPDATE_SEARCHED_INFO_DATA, updatedList, "searchedData")
     }
 
-    const dispatchFunction = (type, updatedData) => {
+    const dispatchFunction = (type, updatedData, stateVar) => {
         return dispatch({
             type: type,
             payload: {
-                searchedData: updatedData
+                [stateVar]: updatedData
             }
         })
     }
 
     const value = {
         handleInitaialUserPlaylist,
-        handleAddNewPlaylists,
+        handleAddNewPlaylist: handleAddNewPlaylist,
         handleRemoveUserPlaylist,
         handleAddToPlaylist,
         handleRemoveFromPlaylist,
