@@ -5,14 +5,17 @@ import { AppContext } from './appContext'
 import { useToFetchPlaylists, useWhenClickedOutside } from '@/hooks';
 import { internalApiRequest } from '@/utils/interceptor';
 import { signIn, useSession } from 'next-auth/react';
+import { useDashboardCtx } from '@/contexts';
 
 export const TracksList = ({ data, countryCode }) => {
     const [tracksData, setTracksData] = useState([]);
 
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {topTracks, country} = useDashboardCtx()
 
     const performAlreadyExistingTopTracksData = () => {
-        const findCountryTopTracks = appCtx.topTracks.find(item => item.countryCode == appCtx.country)
+        // const findCountryTopTracks = appCtx.topTracks.find(item => item.countryCode == appCtx.country)
+        const findCountryTopTracks = topTracks?.find(item => item.countryCode == country)
         if (findCountryTopTracks !== undefined) {
             setTracksData(findCountryTopTracks.data)
         }
@@ -99,7 +102,9 @@ export const ShowPlaylists = ({ show, setShow, trackId }) => {
     // const [fetchPlaylists, setFetchPlaylists] = useState(true);
     const openCreateNew = () => setCreateNew(true);
     const closeCreateNew = () => setCreateNew(false);
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {playlists} = useDashboardCtx()
+
     const { data: session } = useSession();
 
     // const ref = useRef()
@@ -111,7 +116,8 @@ export const ShowPlaylists = ({ show, setShow, trackId }) => {
     useToFetchPlaylists()
 
     // const userFound = appCtx?.playlists?.find(item => item.userId == "user1")
-    const userFound = appCtx?.playlists?.find(item => item.userId == session?.user?.id)
+    // const userFound = appCtx?.playlists?.find(item => item.userId == session?.user?.id)
+    const userFound = playlists?.length && playlists?.find(item => item.userId == session?.user?.id)
 
     // console.log(appCtx.playlists, "appCtx.playlists", trackId)
 
@@ -134,7 +140,8 @@ const PlayListUserInput = ({ closeCreateNew }) => {
 
     const { data: session } = useSession()
 
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {handleAddNewPlaylist} = useDashboardCtx()
 
     // const ref = useRef()
     // useWhenClickedOutside(ref, () => setShow(false));
@@ -168,7 +175,8 @@ const PlayListUserInput = ({ closeCreateNew }) => {
         const { id } = session?.user
         const data = { name: text }
 
-        appCtx?.handlePlaylists(data, id)
+        handleAddNewPlaylist(data, id)
+        // appCtx?.handlePlaylists(data, id)
         // appCtx?.handlePlaylists(data, "user1")
 
         sendDataToDb()
@@ -196,7 +204,8 @@ const PlayListUserInput = ({ closeCreateNew }) => {
 const PlaylistsDropdowns = ({ item, setShow, trackId }) => {
     const [added, setAdded] = useState(false);
 
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {handleAddToPlaylist, playlists} = useDashboardCtx()
 
     const { data: session } = useSession();
 
@@ -213,20 +222,26 @@ const PlaylistsDropdowns = ({ item, setShow, trackId }) => {
     const handleClick = () => {
         // const data = {name, }
         // appCtx.handleAddToPlaylist("user1", name, trackId)
-        appCtx.handleAddToPlaylist(session?.user?.id, name, trackId)
+        // appCtx.handleAddToPlaylist(session?.user?.id, name, trackId)
+
+        handleAddToPlaylist(session?.user?.id, name, trackId)
         updateDataInDb();
         setShow(false)
     }
 
     const checkInWhichPlaylist = () => {
         // const filtered = appCtx.playlists?.filter(item => item.userId === "user1" && item?.lists?.length)
-        const filtered = appCtx.playlists?.filter(item => item.userId == session?.user?.id && item?.lists?.length)
+        
+        // const filtered = appCtx.playlists?.filter(item => item.userId == session?.user?.id && item?.lists?.length)
+        const filtered = playlists?.filter(item => item.userId == session?.user?.id && item?.lists?.length)
+        
         // const filtered = appCtx.playlists?.filter(item => {
         //     console.log(item.userId == session?.user?.id && item?.lists?.length, item.userId, session?.user?.id, item.userId == session?.user?.id, item?.lists?.length)
         //     return item.userId == session?.user?.id && item?.lists?.length
         // })
 
-        console.log(appCtx.playlists, filtered)
+        // console.log(appCtx.playlists, filtered)
+        console.log(playlists, filtered)
 
         filtered[0]?.lists?.forEach(item => {
             if (item?.name == name && item?.tracks?.length) {
@@ -240,7 +255,7 @@ const PlaylistsDropdowns = ({ item, setShow, trackId }) => {
     }, [trackId])
 
     return (
-        <div style={{ cursor: "pointer" }} className="flex gap-2 items-center text-xl justify-between outline outline-1 outline-red-200 px-2 mt-2" onClick={handleClick}>
+        <div style={{ cursor: "pointer" }} className="flex gap-2 items-center text-xl text-zinc-400 justify-between outline outline-1 outline-red-200 px-2 mt-2" onClick={handleClick}>
             <span className='text-ellipsis overflow-hidden w-1/2'>{name}</span>
             <span className='w-1/2 flex justify-center text-4xl'>{added ? <AiOutlineCheck /> : <AiOutlineReconciliation />}</span>
         </div>

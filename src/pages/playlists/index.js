@@ -1,5 +1,6 @@
 import { AppContext } from '@/components/appContext'
 import { ShowUserPlaylists } from '@/components/forPlaylists';
+import { useDashboardCtx } from '@/contexts';
 import { useToFetchPlaylists } from '@/hooks';
 // import { internalApiRequest } from '@/utils/interceptor';
 // import { useQuery } from '@tanstack/react-query';
@@ -10,7 +11,8 @@ import React, { useContext, useEffect, useState } from 'react'
 const UserPlaylists = () => {
   // const [fetchPlaylists, setFetchPlaylists] = useState(true);
 
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
+  const {playlists} = useDashboardCtx()
 
   // const router = useRouter()
 
@@ -44,7 +46,9 @@ const UserPlaylists = () => {
   // })
 
   // const foundPlaylists = appCtx?.playlists?.find(item => item?.userId == "user1" && item?.lists?.length)
-  const foundPlaylists = appCtx?.playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
+  // const foundPlaylists = appCtx?.playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
+
+  const foundPlaylists = playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
 
   // console.log(appCtx?.playlists, foundPlaylists, data?.data, session)
 

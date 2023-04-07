@@ -23,31 +23,31 @@ export const dashboardReducer = (state, action) => {
     const { type, payload } = action
 
     switch (type) {
-        case ACTIONS.ADD_PLAYLIST:
-            // return {
-            //     ...state,
-            //     playlists: payload.playlists
-            // }
-        case ACTIONS.REMOVE_PLAYLIST:
-            // return {
-            //     ...state,
-            //     playlists: payload.playlists
-            // }
-        case ACTIONS.ADD_SONG_INTO_PLAYLIST:
-            // return {
-            //     ...state,
-            //     playlists: payload.playlists
-            // }
-        case ACTIONS.REMOVE_SONG_FROM_PLAYLIST:
-            // return {
-            //     ...state,
-            //     playlists: payload.playlists
-            // }
-        case ACTIONS.INITIAL_USER_SONG_PLAYLIST:
-            // return {
-            //     ...state,
-            //     playlists: payload.playlists
-            // }
+        // case ACTIONS.ADD_PLAYLIST:
+        //     // return {
+        //     //     ...state,
+        //     //     playlists: payload.playlists
+        //     // }
+        // case ACTIONS.REMOVE_PLAYLIST:
+        //     // return {
+        //     //     ...state,
+        //     //     playlists: payload.playlists
+        //     // }
+        // case ACTIONS.ADD_SONG_INTO_PLAYLIST:
+        //     // return {
+        //     //     ...state,
+        //     //     playlists: payload.playlists
+        //     // }
+        // case ACTIONS.REMOVE_SONG_FROM_PLAYLIST:
+        //     // return {
+        //     //     ...state,
+        //     //     playlists: payload.playlists
+        //     // }
+        // case ACTIONS.INITIAL_USER_SONG_PLAYLIST:
+        //     // return {
+        //     //     ...state,
+        //     //     playlists: payload.playlists
+        //     // }
         case ACTIONS.UPDATE_PLAYLIST:
             return {
                 ...state,

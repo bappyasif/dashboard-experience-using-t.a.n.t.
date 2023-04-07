@@ -1,5 +1,6 @@
 import { AppContext } from '@/components/appContext'
 import { TracksList } from '@/components/TracksList'
+import { useDashboardCtx } from '@/contexts'
 import { countriesCodes } from '@/utils/data'
 import { shazamApiInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
@@ -8,7 +9,9 @@ import React, { useContext } from 'react'
 export const fetchTracks = (options) => shazamApiInterceptor(options)
 
 const TopTracksByCountry = ({ countryCode }) => {
-    const appCtx = useContext(AppContext)
+    // const appCtx = useContext(AppContext)
+    const {topTracks, handleCountrySpecificTrends} = useDashboardCtx()
+
     // console.log(data, "DATA<><>!!")
     const manageFetching = () => {
         const url = "/top_country_tracks"
@@ -19,10 +22,14 @@ const TopTracksByCountry = ({ countryCode }) => {
     const decideFetching = () => {
         // const chkIdx = appCtx?.topTracks.findIndex(item => Object.keys(item)[0] == countryCode)
         // return chkIdx !== -1 ? false : true
-        if(!appCtx.topTracks?.length) return true
+        
+        // if(!appCtx.topTracks?.length) return true
+        if(!topTracks?.length) return true
 
-        const findCountryTopTracks = appCtx.topTracks.find(item => item.countryCode == countryCode)
-        console.log(findCountryTopTracks, findCountryTopTracks !== undefined, appCtx.topTracks)
+        // const findCountryTopTracks = appCtx.topTracks.find(item => item.countryCode == countryCode)
+        const findCountryTopTracks = topTracks.find(item => item.countryCode == countryCode)
+        // console.log(findCountryTopTracks, findCountryTopTracks !== undefined, appCtx.topTracks)
+        console.log(findCountryTopTracks, findCountryTopTracks !== undefined, topTracks)
         
         return findCountryTopTracks !== undefined ? false : true
     }
@@ -36,7 +43,8 @@ const TopTracksByCountry = ({ countryCode }) => {
 
         enabled: decideFetching(),
         onSuccess: data => {
-            appCtx.handleTopTracks(data?.data?.result?.tracks, countryCode)
+            handleCountrySpecificTrends(data?.data?.result?.tracks, countryCode)
+            // appCtx.handleTopTracks(data?.data?.result?.tracks, countryCode)
             console.log(data, "data!! success -- Top Tracks")
         }
     })

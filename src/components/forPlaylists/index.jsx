@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { use, useContext } from 'react'
 import { AppContext } from '../appContext'
 import { RenderTrackMinimalView } from '../TracksList'
 import { AiOutlineDelete, AiOutlineScissor } from 'react-icons/ai'
@@ -6,6 +6,7 @@ import { internalApiRequest } from '@/utils/interceptor'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { ShowWhenNoPlaylistIsFoundOrCreated } from '../forDashboard'
+import { useDashboardCtx } from '@/contexts'
 
 export const ShowUserPlaylists = ({ data }) => {
   const renderLists = () => data?.map((item, idx) => <RenderPlaylist key={item.name + idx} item={item} />)
@@ -47,7 +48,8 @@ const RenderTracks = ({ tracks, name }) => {
 }
 
 const RenderTrack = ({ keyId, name, tracks }) => {
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
+  const {topTracks, handleRemoveFromPlaylist} = useDashboardCtx()
   const { data: session } = useSession()
   const { id } = session?.user
 
@@ -55,11 +57,15 @@ const RenderTrack = ({ keyId, name, tracks }) => {
 
   let foundTrack = null
 
-  appCtx.topTracks?.forEach(lists => {
+  // appCtx.topTracks?.forEach(lists => {
+  //   foundTrack = lists?.data.find(item => item.key == keyId)
+  // })
+  topTracks?.forEach(lists => {
     foundTrack = lists?.data.find(item => item.key == keyId)
   })
 
-  console.log(appCtx?.topTracks?.data, keyId, foundTrack, appCtx?.topTracks)
+  console.log(topTracks?.data, keyId, foundTrack, topTracks)
+  // console.log(appCtx?.topTracks?.data, keyId, foundTrack, appCtx?.topTracks)
 
   const deleteTrackFromDb = () => {
     const url = "/playlists";
@@ -76,7 +82,9 @@ const RenderTrack = ({ keyId, name, tracks }) => {
     deleteTrackFromDb().then(() => {
       console.log("deleted successfully from db")
       // appCtx.handleRemoveFromPlaylist("user1", name, keyId)
-      appCtx.handleRemoveFromPlaylist(id, name, keyId)
+      // appCtx.handleRemoveFromPlaylist(id, name, keyId)
+
+      handleRemoveFromPlaylist(id, name, keyId)
     }).catch(err => console.log(err))
 
     // appCtx.handleRemoveFromPlaylist("user1", name, keyId)
@@ -95,7 +103,8 @@ const RenderTrack = ({ keyId, name, tracks }) => {
 }
 
 const RenderNameCard = ({ name, url }) => {
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
+  const {handleRemoveFromPlaylist} = useDashboardCtx()
   const { data: session } = useSession()
   const { id } = session?.user
 
@@ -110,7 +119,8 @@ const RenderNameCard = ({ name, url }) => {
 
   const handleDelete = () => {
     deletePlaylistFromDb().then(() => {
-      appCtx.handleRemovePlaylist(id, name)
+      // appCtx.handleRemovePlaylist(id, name)
+      handleRemoveFromPlaylist(id, name)
       // appCtx.handleRemovePlaylist("user1", name)
     }).catch(err => console.log("error occured....", err))
     // appCtx.handleRemovePlaylist("user1", name)

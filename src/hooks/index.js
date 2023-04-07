@@ -1,4 +1,5 @@
 import { AppContext } from '@/components/appContext'
+import { useDashboardCtx } from '@/contexts'
 import { internalApiRequest, shazamApiInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
 import { signIn, useSession } from 'next-auth/react'
@@ -8,7 +9,8 @@ import React, { useContext, useEffect } from 'react'
 const beginFetch = (options) => shazamApiInterceptor(options)
 
 export function useFetchSearchData(url, query, type, handleSearch, decideRefetching) {
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {handleSearchedInfoData} = useDashboardCtx()
 
     const fetchTracks = () => {
         // const url = { url: "/search_track" }
@@ -24,7 +26,8 @@ export function useFetchSearchData(url, query, type, handleSearch, decideRefetch
         enabled: decideRefetching(),
         onSuccess: data => {
             handleSearch()
-            data?.data?.result?.hits && appCtx.handleSearchData(type, query, data?.data?.result?.hits)
+            data?.data?.result?.hits && handleSearchedInfoData(type, query, data?.data?.result?.hits)
+            // data?.data?.result?.hits && appCtx.handleSearchData(type, query, data?.data?.result?.hits)
             // console.log(data, "Search - fetch succeeded")
         }
     })
@@ -50,7 +53,8 @@ export function useWhenClickedOutside(ref, handler) {
 
 export function useToFetchPlaylists () {
     const {data: session, status} = useSession();
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {playlists, handleInitaialUserPlaylist} = useDashboardCtx()
 
   const fetchingPlaylist = () => {
     const url = "/playlists";
@@ -66,10 +70,12 @@ export function useToFetchPlaylists () {
     queryKey: ["fetching playlist", `${session?.user?.id}`],
     queryFn: fetchingPlaylist,
     refetchOnWindowFocus: false,
-    enabled: status === "authenticated" && appCtx?.playlists?.length == 0,
+    // enabled: status === "authenticated" && appCtx?.playlists?.length == 0,
+    enabled: status === "authenticated" && playlists?.length == 0,
     onSuccess: data => {
-      console.log("fetched playlists!!")
-      appCtx.handleInitialUserPlaylist(data?.data?.result)
+      console.log("fetched playlists!!", data?.data?.result)
+      // appCtx.handleInitialUserPlaylist(data?.data?.result)
+      handleInitaialUserPlaylist(data?.data?.result)
     }
   })
 

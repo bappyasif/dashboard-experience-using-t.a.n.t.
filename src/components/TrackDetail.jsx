@@ -4,15 +4,20 @@ import React, { useContext, useRef, useState } from 'react'
 import { AppContext } from './appContext'
 import { ShowPlaylists } from './TracksList';
 import { useWhenClickedOutside } from '@/hooks';
+import { useDashboardCtx } from '@/contexts';
 
 const TrackDetail = ({ track_key }) => {
-    const appCtx = useContext(AppContext);
+    // const appCtx = useContext(AppContext);
+    const {topTracks, country} = useDashboardCtx()
     // console.log(appCtx?.topTracks[appCtx.country], "appCtx?.topTracks[appCtx.country]")
     // const foundTrack = appCtx?.topTracks[appCtx.country]?.find(track => track.key === track_key)
 
-    const findCountryTopTracks = appCtx?.topTracks.find(item => item.countryCode == appCtx.country)
+    // const findCountryTopTracks = appCtx?.topTracks.find(item => item.countryCode == appCtx.country)
+    // const foundTrack = findCountryTopTracks?.data?.find(track => track.key === track_key)
+    // console.log(foundTrack, "foundTrack", appCtx?.topTracks, findCountryTopTracks)
+    const findCountryTopTracks = topTracks.find(item => item.countryCode == country)
     const foundTrack = findCountryTopTracks?.data?.find(track => track.key === track_key)
-    console.log(foundTrack, "foundTrack", appCtx?.topTracks, findCountryTopTracks)
+    console.log(foundTrack, "foundTrack", topTracks, findCountryTopTracks)
 
     const { data } = useQuery({
         queryKey: ["search track details", `${track_key}`],

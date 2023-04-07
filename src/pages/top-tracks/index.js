@@ -1,18 +1,21 @@
 import { AppContext } from '@/components/appContext';
 import { SelectCountry } from '@/components/select-country';
+import { useDashboardCtx } from '@/contexts';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect } from 'react'
 
 const TopTracksByCountry = () => {
-    const appCtx = useContext(AppContext)
+    // const appCtx = useContext(AppContext)
+    const {handleUpdateCountryName} = useDashboardCtx()
 
     const router = useRouter();
 
     const {status, data: session} = useSession()
 
     const handleCountryChange = (e) => {
-        appCtx.handleCountry(e.target.value != -1 ? e.target.value : "BD")
+        handleUpdateCountryName(e.target.value != -1 ? e.target.value : "BD")
+        // appCtx.handleCountry(e.target.value != -1 ? e.target.value : "BD")
         router.push(`/top-tracks/${e.target.value != -1 ? e.target.value : "BD"}`)
     }
 

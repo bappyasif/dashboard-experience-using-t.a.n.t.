@@ -6,11 +6,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react'
 import { fetchTracks } from '../[countryCode]';
+import { useDashboardCtx } from '@/contexts';
 
 const TrackDetailPage = ({ track_key }) => {
-    const appCtx = useContext(AppContext);
-
-    const router = useRouter()
+    // const appCtx = useContext(AppContext);
+    const {relatedTracks, handleSongRelatedTracks, country} = useDashboardCtx()
 
     const manageFetching = () => {
         const url = "/related_tracks"
@@ -36,7 +36,8 @@ const TrackDetailPage = ({ track_key }) => {
     // }
 
     const decideFetching = () => {
-        const chkIdx = appCtx.relatedTracks.findIndex(item => (item.key == track_key) && (item?.data.length))
+        // const chkIdx = appCtx.relatedTracks.findIndex(item => (item.key == track_key) && (item?.data.length))
+        const chkIdx = relatedTracks?.findIndex(item => (item.key == track_key) && (item?.data.length))
 
         if (chkIdx !== -1) {
             console.log("DONT FETCH DATA")
@@ -44,7 +45,8 @@ const TrackDetailPage = ({ track_key }) => {
         } else {
             // return true
             setTimeout(() => {
-                console.log("FETCH DATA", appCtx.relatedTracks)
+                // console.log("FETCH DATA", appCtx.relatedTracks)
+                console.log("FETCH DATA", relatedTracks)
                 return true
                 // return chkIdx !== -1 ? false : true
             }, 4000)
@@ -58,7 +60,8 @@ const TrackDetailPage = ({ track_key }) => {
         // enabled: false,
         enabled: decideFetching(),
         onSuccess: data => {
-            appCtx.handleRelatedTracks(data?.data?.result?.tracks, track_key)
+            handleSongRelatedTracks(data?.data?.result?.tracks, track_key)
+            // appCtx.handleRelatedTracks(data?.data?.result?.tracks, track_key)
             console.log(data, "data!! success - related tracks!!", data?.data?.result?.tracks)
         }
     })
@@ -68,9 +71,11 @@ const TrackDetailPage = ({ track_key }) => {
     return (
         <main className='flex flex-col w-full'>
             <div className='text-2xl w-full text-center'>TrackDetail -- {track_key}</div>
-            <Link className='text-xl bg-blue-400 px-4 py-1 rounded-lg w-fit' href={`/top-tracks/${appCtx.country}`}>Go To Tracks List</Link>
+            {/* <Link className='text-xl bg-blue-400 px-4 py-1 rounded-lg w-fit' href={`/top-tracks/${appCtx.country}`}>Go To Tracks List</Link> */}
+            <Link className='text-xl bg-blue-400 px-4 py-1 rounded-lg w-fit' href={`/top-tracks/${country}`}>Go To Tracks List</Link>
             <TrackDetail track_key={track_key} />
-            <RelatedTracks trackId={track_key} data={appCtx.relatedTracks} />
+            {/* <RelatedTracks trackId={track_key} data={appCtx.relatedTracks} /> */}
+            <RelatedTracks trackId={track_key} data={relatedTracks} />
         </main>
     )
 }

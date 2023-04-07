@@ -10,7 +10,7 @@ export const DashboardContextProvider = ({ children }) => {
         dispatch({
             type: ACTIONS.UPDATE_PLAYLIST,
             payload: {
-                playlists: data
+                playlists: [data]
             }
         })
     }
@@ -60,8 +60,9 @@ export const DashboardContextProvider = ({ children }) => {
                     }
                 }
             }
+            return item
             // console.log(prev, "after")
-            return prev[0]
+            // return prev[0]
         })
 
         dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
@@ -78,8 +79,9 @@ export const DashboardContextProvider = ({ children }) => {
                     // console.log(list, item, "<><>", prev)
                 })
             }
+            return item
             // console.log(prev, "after")
-            return prev[0]
+            // return prev[0]
         })
 
         dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
@@ -127,7 +129,6 @@ export const DashboardContextProvider = ({ children }) => {
         handleRemoveUserPlaylist,
         handleAddToPlaylist,
         handleRemoveFromPlaylist,
-        handleInitaialUserPlaylist,
         handleCountrySpecificTrends,
         handleSongRelatedTracks,
         handleSearchedInfoData,

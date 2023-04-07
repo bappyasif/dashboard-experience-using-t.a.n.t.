@@ -3,9 +3,11 @@ import { AppContext } from '../appContext'
 import { countriesCodes } from "../../utils/data"
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
+import { useDashboardCtx } from '@/contexts';
 
 export const TrendingLists = () => {
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
+  const {topTracks} = useDashboardCtx()
 
   const { data: session, status } = useSession();
 
@@ -13,15 +15,18 @@ export const TrendingLists = () => {
     status === "unauthenticated" ? signIn() : null
   }, [status])
 
-  console.log(appCtx?.topTracks, "top tracks")
+  // console.log(appCtx?.topTracks, "top tracks")
+  console.log(topTracks, "top tracks")
   
-  const renderCountriesListsViewed = () => appCtx?.topTracks.map(item => <CountryListsDetails key={item.countryCode} item={item} />)
+  // const renderCountriesListsViewed = () => appCtx?.topTracks.map(item => <CountryListsDetails key={item.countryCode} item={item} />)
+  const renderCountriesListsViewed = () => topTracks?.map(item => <CountryListsDetails key={item.countryCode} item={item} />)
 
   return (
     <section className='flex gap-4 justify-between px-4'>
       {/* <div>TrendingLists</div> */}
       {
-        appCtx?.topTracks?.length
+        // appCtx?.topTracks?.length
+        topTracks?.length
           ? renderCountriesListsViewed()
           : <ShowWhenNoTrendingListVisited />
       }
@@ -67,9 +72,11 @@ const CountryListsDetails = ({ item }) => {
 }
 
 export const AlreadyExistingPlaylistsByThisUser = ({ session }) => {
-  const appCtx = useContext(AppContext);
+  // const appCtx = useContext(AppContext);
+  const {playlists} = useDashboardCtx()
 
-  const foundPlaylists = appCtx?.playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
+  // const foundPlaylists = appCtx?.playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
+  const foundPlaylists = playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
 
   const renderLists = () => foundPlaylists?.lists.map(item => <RenderPlaylistMinimumView key={item.name} item={item} />);
 
