@@ -1,6 +1,5 @@
-import { AppContext } from '@/components/appContext'
 import { useFetchSearchData } from '@/hooks'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RenderTrackMinimalView } from "../../TracksList"
 import { useDashboardCtx } from '@/contexts'
 
@@ -16,16 +15,15 @@ export const PrepareForDataRendering = ({ type, query, handleSearch, ready }) =>
 const SearchArtists = ({query, type, handleSearch, ready}) => {
     const [dataset, setDataset] = useState([]);
 
-    // const appCtx = useContext(AppContext);
     const {searchedData} = useDashboardCtx()
 
     const decideRefetching2 = () => decideRefetching(searchedData, ready, dataset, setDataset, type, query)
 
-    console.log(query, type, ready);
+    // console.log(query, type, ready);
 
     const data = useFetchSearchData("/search_artist", query, type, handleSearch, decideRefetching2)
 
-    console.log(data, "DATA SEARCHED For Artist!!", dataset)
+    console.log("DATA SEARCHED For Artist!!")
 
     useEffect(() => {
         data?.length && setDataset([])
@@ -55,13 +53,11 @@ const RenderArtist = ({item}) => {
 
 const decideRefetching = (stateVar, ready, dataset, setDataset, type, query) => {
     if (ready) {
-        // const found = appCtx?.searchedData?.find(item => item.type === type && item.query === query && item.data?.length)
         const found = stateVar?.find(item => item.type === type && item.query === query && item.data?.length)
-        // console.log(found, "FOUND!!", appCtx?.searchedData, ready, !dataset.length, dataset.length)
-        console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
+        // console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
+        
         if (found) {
             !dataset.length && setDataset(found?.data)
-            // setDataset(found?.data)
         }
         return found === undefined ? true : false
     } else {
@@ -72,15 +68,11 @@ const decideRefetching = (stateVar, ready, dataset, setDataset, type, query) => 
 const SearchTracks = ({ query, type, handleSearch, ready }) => {
     const [dataset, setDataset] = useState([]);
 
-    // const appCtx = useContext(AppContext);
     const {searchedData} = useDashboardCtx()
 
-    // const decideRefetching2 = () => decideRefetching(appCtx, ready, dataset, setDataset, type, query)
     const decideRefetching2 = () => decideRefetching(searchedData, ready, dataset, setDataset, type, query)
 
     const data = useFetchSearchData("/search_track", query, type, handleSearch, decideRefetching2)
-
-    // console.log(data, "DATA SEARCHED!! for tracks", dataset)
 
     useEffect(() => {
         data?.length && setDataset([])

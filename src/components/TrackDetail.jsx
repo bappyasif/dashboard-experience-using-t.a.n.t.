@@ -7,17 +7,13 @@ import { useWhenClickedOutside } from '@/hooks';
 import { useDashboardCtx } from '@/contexts';
 
 const TrackDetail = ({ track_key }) => {
-    // const appCtx = useContext(AppContext);
     const {topTracks, country} = useDashboardCtx()
-    // console.log(appCtx?.topTracks[appCtx.country], "appCtx?.topTracks[appCtx.country]")
-    // const foundTrack = appCtx?.topTracks[appCtx.country]?.find(track => track.key === track_key)
 
-    // const findCountryTopTracks = appCtx?.topTracks.find(item => item.countryCode == appCtx.country)
-    // const foundTrack = findCountryTopTracks?.data?.find(track => track.key === track_key)
-    // console.log(foundTrack, "foundTrack", appCtx?.topTracks, findCountryTopTracks)
     const findCountryTopTracks = topTracks.find(item => item.countryCode == country)
+    
     const foundTrack = findCountryTopTracks?.data?.find(track => track.key === track_key)
-    console.log(foundTrack, "foundTrack", topTracks, findCountryTopTracks)
+    
+    // console.log(foundTrack, "foundTrack", topTracks, findCountryTopTracks)
 
     const { data } = useQuery({
         queryKey: ["search track details", `${track_key}`],
@@ -27,7 +23,6 @@ const TrackDetail = ({ track_key }) => {
         },
         refetchOnWindowFocus: false,
         enabled: false
-        // enabled: foundTrack == undefined ? true : false
     })
 
     // console.log(data?.data.result, "!!")
@@ -46,18 +41,13 @@ const TrackDetail = ({ track_key }) => {
 
 const RenderTrackDetails = ({ data }) => {
     const { hub, share, url, key } = data
-    // const {actions, displayname } = hub
-    // const {avatar, href, html, image, snapchat, subject} = share
+
     return (
         <section>
-            {/* <RenderShareInfo share={share} />
-            <RenderHubInfo hub={hub} /> */}
             <div className='flex justify-around'>
                 <RenderShareInfo share={share} trackId={key} />
                 <RenderHubInfo hub={hub} url={url} share={share} />
-                {/* <a className='text-xl bg-blue-200 h-fit px-2' href={url}>Open Track In Shazam</a> */}
             </div>
-            {/* <a href={url}>Open Track In Shazam</a> */}
         </section>
     )
 
@@ -67,16 +57,13 @@ const RenderShareInfo = ({ share, trackId }) => {
     const [show, setShow] = useState(false);
 
     const ref = useRef()
+    
     useWhenClickedOutside(ref, () => setShow(false));
 
-    const { avatar, href, html, image, snapchat, subject } = share
+    const { href, html, image, snapchat } = share
 
     return (
         <div className='flex pb-4'>
-            {/* <div className='flex flex-col w-1/4'>
-                <img src={avatar || image} width={200} height={130} alt={subject} />
-                <h2 className='text-2xl bg-blue-200 rounded-md'>{subject}</h2>
-            </div> */}
             <div className='relative' ref={ref}>
                 <img src={image} />
                 <div className='flex gap-1 flex-col text-xl'>

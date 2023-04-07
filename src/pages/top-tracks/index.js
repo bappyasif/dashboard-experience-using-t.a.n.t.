@@ -1,12 +1,10 @@
-import { AppContext } from '@/components/appContext';
 import { SelectCountry } from '@/components/select-country';
 import { useDashboardCtx } from '@/contexts';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const TopTracksByCountry = () => {
-    // const appCtx = useContext(AppContext)
     const {handleUpdateCountryName} = useDashboardCtx()
 
     const router = useRouter();
@@ -15,14 +13,10 @@ const TopTracksByCountry = () => {
 
     const handleCountryChange = (e) => {
         handleUpdateCountryName(e.target.value != -1 ? e.target.value : "BD")
-        // appCtx.handleCountry(e.target.value != -1 ? e.target.value : "BD")
         router.push(`/top-tracks/${e.target.value != -1 ? e.target.value : "BD"}`)
     }
 
     useEffect(()  => {
-        // (status == "unauthenticated" || status == "loading" && status !== "authenticated") && console.log(status, "STATIS")
-        // status == "unauthenticated" || status == "loading" ? signIn() : null
-        // (!session) ? signIn() : null
         status == "unauthenticated" ? signIn() : null
     }, [status])
     

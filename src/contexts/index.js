@@ -61,8 +61,6 @@ export const DashboardContextProvider = ({ children }) => {
                 }
             }
             return item
-            // console.log(prev, "after")
-            // return prev[0]
         })
 
         dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
@@ -76,12 +74,9 @@ export const DashboardContextProvider = ({ children }) => {
                         const newTracks = list?.tracks.filter(val => val != trackId);
                         list.tracks = newTracks;
                     }
-                    // console.log(list, item, "<><>", prev)
                 })
             }
             return item
-            // console.log(prev, "after")
-            // return prev[0]
         })
 
         dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
@@ -100,7 +95,6 @@ export const DashboardContextProvider = ({ children }) => {
     }
 
     const handleCountrySpecificTrends = (data, countryCode) => {
-        // console.log(data, countryCode, "<><><><>", state.topTracks, state)
         const updatedList = data ? (state.topTracks || []).concat({ data, countryCode }) : state.topTracks
 
         dispatchFunction(ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY, updatedList, "topTracks")
@@ -108,7 +102,7 @@ export const DashboardContextProvider = ({ children }) => {
 
     const handleSearchedInfoData = (type, query, data) => {
         const checkIfExistAlready = state.searchedData?.findIndex(item => item?.type === type && item.query === query && data?.length)
-        // console.log(checkIfExistAlready, "checkIfExistAlready!!><><")
+
         const updatedList = checkIfExistAlready === -1 ? state.searchedData.concat({ type, query, data }) : state.searchedData
 
         dispatchFunction(ACTIONS.UPDATE_SEARCHED_INFO_DATA, updatedList, "searchedData")

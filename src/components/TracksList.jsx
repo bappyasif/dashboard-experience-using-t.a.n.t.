@@ -1,20 +1,17 @@
 import Link from 'next/link';
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineCheck, AiOutlineReconciliation } from 'react-icons/ai';
-import { AppContext } from './appContext'
 import { useToFetchPlaylists, useWhenClickedOutside } from '@/hooks';
 import { internalApiRequest } from '@/utils/interceptor';
 import { signIn, useSession } from 'next-auth/react';
 import { useDashboardCtx } from '@/contexts';
 
-export const TracksList = ({ data, countryCode }) => {
+export const TracksList = ({ data }) => {
     const [tracksData, setTracksData] = useState([]);
 
-    // const appCtx = useContext(AppContext);
     const {topTracks, country} = useDashboardCtx()
 
     const performAlreadyExistingTopTracksData = () => {
-        // const findCountryTopTracks = appCtx.topTracks.find(item => item.countryCode == appCtx.country)
         const findCountryTopTracks = topTracks?.find(item => item.countryCode == country)
         if (findCountryTopTracks !== undefined) {
             setTracksData(findCountryTopTracks.data)
@@ -64,12 +61,8 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist }) => {
             </div>
 
             <img
-                // className={fromPlaylist ? "h-full w-full" : "h-full"} 
                 src={background || coverart}
                 style={{ maxHeight: fromPlaylist ? "301px" : "324px" }}
-            // style={{maxHeight: !fromPlaylist && "324px"}}
-            // width={"100%"} 
-            // height={310} 
             />
             <p className={`text-2xl overflow-hidden text-ellipsis ${fromSearch ? "text-center" : ""}`} style={{
                 lineHeight: "1em",
@@ -88,38 +81,24 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist }) => {
                         : null
                 }
             </div>
-            {/* {
-                show
-                    ? <ShowPlaylists setShow={setShow} />
-                    : null
-            } */}
         </article>
     )
 }
 
 export const ShowPlaylists = ({ show, setShow, trackId }) => {
     const [createNew, setCreateNew] = useState(false);
-    // const [fetchPlaylists, setFetchPlaylists] = useState(true);
-    const openCreateNew = () => setCreateNew(true);
-    const closeCreateNew = () => setCreateNew(false);
-    // const appCtx = useContext(AppContext);
-    const {playlists} = useDashboardCtx()
 
+    const {playlists} = useDashboardCtx()
+    
     const { data: session } = useSession();
 
-    // const ref = useRef()
-    // useWhenClickedOutside(ref, () => setShow(false));
-    // useWhenClickedOutside(ref, closeCreateNew);
+    const openCreateNew = () => setCreateNew(true);
 
-    // const {data} = useToFetchPlaylists(fetchPlaylists, setFetchPlaylists)
-    // useToFetchPlaylists(fetchPlaylists, setFetchPlaylists)
+    const closeCreateNew = () => setCreateNew(false);
+
     useToFetchPlaylists()
 
-    // const userFound = appCtx?.playlists?.find(item => item.userId == "user1")
-    // const userFound = appCtx?.playlists?.find(item => item.userId == session?.user?.id)
     const userFound = playlists?.length && playlists?.find(item => item.userId == session?.user?.id)
-
-    // console.log(appCtx.playlists, "appCtx.playlists", trackId)
 
     const renderPlaylists = () => userFound?.lists?.map(item => <PlaylistsDropdowns key={item.name} item={item} setShow={setShow} trackId={trackId} />)
 
@@ -140,50 +119,29 @@ const PlayListUserInput = ({ closeCreateNew }) => {
 
     const { data: session } = useSession()
 
-    // const appCtx = useContext(AppContext);
     const {handleAddNewPlaylist} = useDashboardCtx()
-
-    // const ref = useRef()
-    // useWhenClickedOutside(ref, () => setShow(false));
 
     const handleText = evt => setText(evt.target.value)
 
-    // const sendDataToDb = async () => {
-    //     const response = await internalApiRequest({url: "/playlists", method: "post", body: {"name": "p1"}, headers: {"Content-Type": "application/json"}})
-    //     // const response = await fetch({url: "/playlists", method: "post", body: {"name": "p1"}})
-    //     // const response = await fetch("/playlists", {method: "post", body: {"name": "p1"}, headers: {"Content-Type": "application/json"}})
-    //     // const data = await response?.json();
-
-    //     // console.log(data, "DATADATADATADATA", response)
-
-    //     console.log("DATADATADATADATA", response)
-    // }
-
     const sendDataToDb = () => {
-        // const response = internalApiRequest({url: "/playlists", method: "post", body: JSON.stringify({"name": "p1"}), headers: {"Content-Type": "application/json"}})
         const { id } = session?.user
-
-        // const response = internalApiRequest({url: "/playlists", method: "POST", data: JSON.stringify({name: text, userId: "user1"}), headers: {"Content-Type": "application/json"}})
 
         const response = internalApiRequest({ url: "/playlists", method: "POST", data: JSON.stringify({ name: text, userId: id }), headers: { "Content-Type": "application/json" } })
 
-        response.then(value => console.log(value))
+        response.then(() => console.log("data sent to server"))
     }
 
     const handleCreate = () => {
-        // console.log(text)
         const { id } = session?.user
         const data = { name: text }
 
         handleAddNewPlaylist(data, id)
-        // appCtx?.handlePlaylists(data, id)
-        // appCtx?.handlePlaylists(data, "user1")
 
         sendDataToDb()
         closeCreateNew()
     }
 
-    console.log(session, "SESSION!!")
+    // console.log(session, "SESSION!!")
 
     return (
         <div className=''>
@@ -204,7 +162,6 @@ const PlayListUserInput = ({ closeCreateNew }) => {
 const PlaylistsDropdowns = ({ item, setShow, trackId }) => {
     const [added, setAdded] = useState(false);
 
-    // const appCtx = useContext(AppContext);
     const {handleAddToPlaylist, playlists} = useDashboardCtx()
 
     const { data: session } = useSession();
@@ -215,33 +172,19 @@ const PlaylistsDropdowns = ({ item, setShow, trackId }) => {
         const url = "/playlists";
         const method = "PUT"
         const data = JSON.stringify({ name, trackId, userId: session?.user?.id })
-        // const data = JSON.stringify({name, trackId, userId: "user1"})
         internalApiRequest({ url, method, data, headers: { "Content-Type": "application/json" } })
     }
 
     const handleClick = () => {
-        // const data = {name, }
-        // appCtx.handleAddToPlaylist("user1", name, trackId)
-        // appCtx.handleAddToPlaylist(session?.user?.id, name, trackId)
-
         handleAddToPlaylist(session?.user?.id, name, trackId)
         updateDataInDb();
         setShow(false)
     }
 
     const checkInWhichPlaylist = () => {
-        // const filtered = appCtx.playlists?.filter(item => item.userId === "user1" && item?.lists?.length)
-        
-        // const filtered = appCtx.playlists?.filter(item => item.userId == session?.user?.id && item?.lists?.length)
         const filtered = playlists?.filter(item => item.userId == session?.user?.id && item?.lists?.length)
         
-        // const filtered = appCtx.playlists?.filter(item => {
-        //     console.log(item.userId == session?.user?.id && item?.lists?.length, item.userId, session?.user?.id, item.userId == session?.user?.id, item?.lists?.length)
-        //     return item.userId == session?.user?.id && item?.lists?.length
-        // })
-
-        // console.log(appCtx.playlists, filtered)
-        console.log(playlists, filtered)
+        // console.log(playlists, filtered)
 
         filtered[0]?.lists?.forEach(item => {
             if (item?.name == name && item?.tracks?.length) {
