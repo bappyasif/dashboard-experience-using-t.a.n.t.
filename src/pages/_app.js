@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState } from 'react'
 import { SessionProvider } from "next-auth/react";
+import { DashboardContextProvider } from '@/contexts';
 
 export default function App({ Component, pageProps }) {
   const [topTracks, setTopTracks] = useState([]);
@@ -113,7 +114,8 @@ export default function App({ Component, pageProps }) {
 
   return (
     <SessionProvider session={pageProps.session}>
-      <AppContext.Provider value={{ handleRemovePlaylist, handleInitialUserPlaylist, handleRemoveFromPlaylist, handleAddToPlaylist, handlePlaylists, playlists, handleSearchData, searchedData, handleTopTracks, topTracks, handleCountry, country, handleRelatedTracks, relatedTracks }}>
+      {/* <AppContext.Provider value={{ handleRemovePlaylist, handleInitialUserPlaylist, handleRemoveFromPlaylist, handleAddToPlaylist, handlePlaylists, playlists, handleSearchData, searchedData, handleTopTracks, topTracks, handleCountry, country, handleRelatedTracks, relatedTracks }}> */}
+      <DashboardContextProvider>
         <QueryClientProvider client={clientQuery}>
           <div className='flex gap-9'>
             <Navbar />
@@ -122,7 +124,8 @@ export default function App({ Component, pageProps }) {
           <Footer />
           <ReactQueryDevtools />
         </QueryClientProvider>
-      </AppContext.Provider>
+      </DashboardContextProvider>
+      {/* </AppContext.Provider> */}
     </SessionProvider>
   )
 }
