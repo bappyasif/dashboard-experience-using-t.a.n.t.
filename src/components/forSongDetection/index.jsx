@@ -1,253 +1,114 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { shazamApiInterceptor } from "@/utils/interceptor"
+import { useEffect, useRef, useState } from "react"
 
 export const RecordMedia = () => {
-  const [recorder, setRecorder] = useState({});
+    const [shazamData, setShazamData] = useState(false)
+    const [forMedia, setForMedia] = useState({})
 
-  const ref = useRef()
+    let audioChunks = [];
+    const mediaRecorder = forMedia?.recorder;
+    const ref = useRef()
 
-  const audioChunks = [];
-
-  const handleGetUserConsent = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-    setRecorder(prev => {
-      return {
-        ...prev,
-        stream: stream
-      }
-    })
-  }
-
-  const processMediaStream = () => {
-    const blob = new Blob(audioChunks, { type: "audio/mp3" })
-    ref.current.src = URL.createObjectURL(blob)
-
-    console.log(blob, "BLOB!!")
-  }
-
-  const handleStartRecording = () => {
-    const mediaRecorder = new MediaRecorder(recorder.stream);
-    mediaRecorder.ondataavailable = evt => {
-      audioChunks.push(evt.data)
-      if (mediaRecorder.state === "inactive") {
-        processMediaStream()
-        // mediaRecorder.start();
-      }
+    const lookForMatches = (blob) => {
+        const data = new FormData()
+        data.append("upload_file", blob)
+        console.log(data, "DATA")
+        return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
     }
 
-    console.log(mediaRecorder.state, "befiore")
-
-    // if (mediaRecorder?.state === "inactive") {
-    //   mediaRecorder.start();
-    // }
-
-    // mediaRecorder.stop();
-    console.log(mediaRecorder, mediaRecorder.state, "start!!", recorder, mediaRecorder?.current)
-    // mediaRecorder.current.start();
-    setRecorder(prev => ({ ...prev, begin: true, media: mediaRecorder }))
-  }
-
-  const handleStopRecording = () => {
-    const mediaRecorder = recorder?.media;
-    // mediaRecorder?.current?.stop();
-    // mediaRecorder.stop();
-    console.log(mediaRecorder, "stop!!", mediaRecorder?.state)
-
-    if (mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
+    const sendData = blob => {
+        lookForMatches(blob).then(data => {
+            console.log(data?.data?.result, data)
+            setShazamData(data?.data?.result)
+        }).catch(err => console.log("error occured....", err))
     }
 
-    setRecorder(prev => ({ ...prev, begin: false }))
-  }
-
-  useEffect(() => {
-    if (recorder?.media) {
-      const mediaRecorder = recorder?.media;
-      if (mediaRecorder?.state === "inactive") {
-        mediaRecorder.start();
-      }
+    const processMedia = () => {
+        const blob = new Blob(audioChunks, { type: "audio/mp3" });
+        ref.current.src = URL.createObjectURL(blob);
+        ref.current.controls = true;
+        ref.current.autoplay = true;
+        sendData(blob);
     }
-  }, [recorder?.media])
 
-  useEffect(() => {
-    handleGetUserConsent();
-  }, [])
+    const beginRecordingUserVoice = () => {
+        const mediaRecorder = forMedia?.recorder;
 
-  console.log(recorder?.stream, recorder)
+        (mediaRecorder).ondataavailable = evt => {
+            audioChunks.push(evt.data);
+            if (mediaRecorder.state === "inactive") {
+                processMedia();
+            }
+        }
+    }
 
-  return (
-    <section>
-      <div>Record Media</div>
-      <audio ref={ref} controls={true} autoPlay={true} />
-      <button
-        onClick={recorder?.begin ? handleStopRecording : handleStartRecording}
-      >{recorder?.begin ? "Record" : "Mic"}</button>
-    </section>
-  )
+    const streamHandler = (stream) => {
+        const rec = new MediaRecorder(stream)
+
+        rec.ondataavailable = evt => {
+            audioChunks.push(evt.data)
+
+            if (rec.state === "inactive") {
+                processMedia();
+            }
+        }
+
+        updateStateVariable({recorder: rec})
+    }
+
+    const getAccessToUserMediaDevice = () => {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => streamHandler(stream))
+            .catch(err => console.log(err))
+    }
+
+    const onStart = () => {
+        audioChunks = [];
+
+        mediaRecorder.start()
+
+        beginRecordingUserVoice();
+
+        updateStateVariable({ begin: false })
+    }
+
+    const onStop = () => {
+        audioChunks = [];
+
+        mediaRecorder.stop()
+
+        updateStateVariable({ begin: true })
+    }
+
+    const updateStateVariable = (data) => {
+        setForMedia(prev => {
+            return {
+                ...prev,
+                ...data
+            }
+        })
+    }
+
+    useEffect(() => {
+        getAccessToUserMediaDevice()
+        updateStateVariable({ begin: true })
+    }, [])
+
+    console.log(shazamData, forMedia)
+
+    return (
+        <section className='flex flex-col items-center ml-56'>
+            <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
+
+            <div className='flex justify-start gap-4 items-center'>
+                <audio className='my-4' ref={ref} src=""></audio>
+                <p className='flex gap-4 my-4'>
+                    <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}>Record</button>
+                    <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}>Stop</button>
+                </p>
+            </div>
+
+            <hr />
+        </section>
+    )
 }
-
-
-
-
-
-
-
-
-
-
-
-// export const RecordMedia = () => {
-//   const [recorder, setRecorder] = useState({});
-
-//   const ref = useRef()
-
-//   const audioChunks = [];
-
-//   const handleGetUserConsent = async () => {
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-//     setRecorder(prev => {
-//       return {
-//         ...prev,
-//         stream: stream
-//       }
-//     })
-//   }
-
-//   const processMediaStream = () => {
-//     const blob = new Blob(audioChunks, { type: "audio/mp3" })
-//     ref.current.src = URL.createObjectURL(blob)
-
-//     console.log(blob, "BLOB!!")
-//   }
-
-//   const handleStartRecording = () => {
-//     const mediaRecorder = new MediaRecorder(recorder.stream);
-//     mediaRecorder.ondataavailable = evt => {
-//       audioChunks.push(evt.data)
-//       if (mediaRecorder.state === "inactive") {
-//         processMediaStream()
-//         // mediaRecorder.start();
-//       }
-//     }
-
-//     console.log(mediaRecorder.state, "befiore")
-
-//     if (mediaRecorder?.state === "inactive") {
-//       mediaRecorder.start();
-//     }
-
-//     // mediaRecorder.stop();
-//     console.log(mediaRecorder, mediaRecorder.state, "start!!", recorder, mediaRecorder?.current)
-//     // mediaRecorder.current.start();
-//     setRecorder(prev => ({ ...prev, begin: true, media: mediaRecorder }))
-//   }
-
-//   const handleStopRecording = () => {
-//     const mediaRecorder = recorder?.media;
-//     // mediaRecorder?.current?.stop();
-//     // mediaRecorder.stop();
-//     console.log(mediaRecorder, "stop!!", mediaRecorder?.state)
-
-//     if (mediaRecorder.state === "recording") {
-//       mediaRecorder.stop();
-//     }
-
-//     setRecorder(prev => ({ ...prev, begin: false }))
-//   }
-
-//   useEffect(() => {
-//     handleGetUserConsent();
-//   }, [])
-
-//   console.log(recorder?.stream, recorder)
-
-//   return (
-//     <section>
-//       <div>Record Media</div>
-//       <audio ref={ref} controls={true} autoPlay={true} />
-//       <button
-//         onClick={recorder?.begin ? handleStopRecording : handleStartRecording}
-//       >{recorder?.begin ? "Record" : "Mic"}</button>
-//     </section>
-//   )
-// }
-
-// export const RecordMedia = () => {
-//   const [recorder, setRecorder] = useState({});
-
-//   const handleBeginRecording = async () => {
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-//     setRecorder(prev => {
-//       return {
-//         ...prev,
-//         begin: true,
-//         stream: stream
-//       }
-//     })
-//   }
-
-//   const handleStopRecording = () => {
-//     // const mediaRecorder = recorder?.mediaRecorder;
-//     // mediaRecorder.stop();
-//     // console.log(mediaRecorder, "stop!!")
-
-//     setRecorder(prev => ({ ...prev, begin: false }))
-//   }
-
-//   const beginRecording = () => {
-//     const mediaRecorder = recorder.mediaRecorder;
-//     let chunks = [];
-//     if (mediaRecorder) {
-//       if (mediaRecorder?.state === "inactive") {
-//         mediaRecorder.start()
-//       }
-
-//       mediaRecorder.ondataavailable = evt => chunks.push(evt.data)
-
-//       mediaRecorder.onstop = () => {
-//         const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
-//         // refreshing chunks
-//         chunks = []
-
-//         setRecorder(prev => {
-//           if (prev.mediaRecorder) {
-//             return {
-//               ...prev,
-//               audio: window.URL.createObjectURL(blob)
-//             }
-//           } 
-//           // else {
-//           //   return prev
-//           // }
-//         })
-//       }
-//     }
-//   }
-
-//   useEffect(() => {
-//     beginRecording()
-//   }, [recorder.mediaRecorder])
-
-
-//   useEffect(() => {
-//     if (recorder?.stream) {
-//       setRecorder(prev => {
-//         return {
-//           ...prev,
-//           mediaRecorder: new MediaRecorder(prev.stream)
-//         }
-//       })
-//     }
-//   }, [recorder.stream])
-
-//   console.log(recorder?.stream, recorder)
-
-//   return (
-//     <section>
-//       <div>Record Media</div>
-//       <audio src={recorder?.stream} controls={true} />
-//       <button onClick={recorder?.begin ? handleStopRecording : handleBeginRecording}>{recorder?.begin ? "Stop" : "Record"}</button>
-//     </section>
-//   )
-// }
