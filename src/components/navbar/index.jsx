@@ -24,7 +24,7 @@ const RenderNav = ({ item }) => {
             ||
             status === "authenticated" && name !== "Sign In"
             ?
-            < Link href={path} className="text-2xl bg-zinc-400 p-2 pr-11 flex gap-2 items-center rounded-lg" >
+            < Link href={path} className="text-2xl bg-zinc-400 p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max" >
                 <span>{name}</span>
                 <span>{icon}</span>
             </Link >

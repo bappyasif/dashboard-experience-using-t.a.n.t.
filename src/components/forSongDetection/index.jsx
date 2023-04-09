@@ -1,5 +1,6 @@
 import { shazamApiInterceptor } from "@/utils/interceptor"
 import { useEffect, useRef, useState } from "react"
+import { RenderSongDetails } from "./forRendering"
 
 export const RecordMedia = () => {
     const [shazamData, setShazamData] = useState(false)
@@ -61,9 +62,15 @@ export const RecordMedia = () => {
     }
 
     const runThisEveryPeriodically = () => {
-        console.log("!!runing!! __ II")
+        console.log("!!runing!! __ II", mediaRecorder?.state)
         // mediaRecorderChunked.stop()
         // processMedia()
+        if (mediaRecorder?.state === "recording") {
+            mediaRecorder.requestData();
+            // mediaRecorder.stop()
+            // mediaRecorder.ondataavailable()
+            // mediaRecorder.start()
+        }
     }
 
     const runThisForMediaControlerEvents = () => {
@@ -110,19 +117,26 @@ export const RecordMedia = () => {
     console.log(shazamData, forMedia, audioChunks)
 
     return (
-        <section className='flex flex-col items-center ml-56'>
-            <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
+        <div className="w-full flex flex-col items-center">
+            <section className='flex flex-col items-center'>
+                <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
 
-            <div className='flex justify-start gap-4 items-center'>
-                <audio className='my-4' ref={ref} src=""></audio>
-                <p className='flex gap-4 my-4'>
-                    <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}>Record</button>
-                    <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}>Stop</button>
-                </p>
-            </div>
+                <div className='flex justify-start gap-4 items-center'>
+                    <audio className='my-4' ref={ref} src=""></audio>
+                    <p className='flex gap-4 my-4'>
+                        <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}>Record</button>
+                        <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}>Stop</button>
+                    </p>
+                </div>
 
-            <hr />
-        </section>
-        // checkout sections in shazam result dataset - options for bringin in video url and "lyrics"!!
+                <hr />
+            </section>
+            {/* // checkout sections in shazam result dataset - options for bringin in video url and "lyrics"!! */}
+            {
+                shazamData
+                    ? <RenderSongDetails data={shazamData} />
+                    : null
+            }
+        </div>
     )
 }

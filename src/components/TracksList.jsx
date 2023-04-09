@@ -28,6 +28,8 @@ export const TracksList = ({ data }) => {
         performAlreadyExistingTopTracksData()
     }, [])
 
+    console.log(tracksData, "ata")
+
     const renderTracks = () => (data || tracksData)?.map(track => track?.images && <RenderTrackMinimalView key={track.key} track={track} />)
 
     return (
@@ -41,7 +43,7 @@ export const TracksList = ({ data }) => {
     )
 }
 
-export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist }) => {
+export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist, fromDetect }) => {
     const [show, setShow] = useState(false);
 
     const ref = useRef()
@@ -51,7 +53,7 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist }) => {
     const { background, coverart } = images
 
     return (
-        <article ref={ref} className={`${fromPlaylist ? "w-full" : "w-1/4"} flex flex-col justify-between relative bg-stone-200 p-1 rounded-lg`} style={{ height: fromPlaylist ? "317px" : !fromPlaylist && fromSearch ? "418px" : "472px" }}>
+        <article ref={ref} className={`${fromPlaylist ? "w-full" : fromDetect ? "w-1/2" : "w-1/4"} flex flex-col justify-between relative bg-stone-200 p-1 rounded-lg`} style={{ height: fromPlaylist ? "317px" : !fromPlaylist && fromSearch ? "418px" : "472px" }}>
             <div className='bg-teal-200 px-4 mb-1 rounded-md text-xl font-bold text-center'>
                 {
                     fromSearch
