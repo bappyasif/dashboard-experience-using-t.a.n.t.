@@ -6,12 +6,15 @@ export const RecordMedia = () => {
     const [forMedia, setForMedia] = useState({})
 
     let audioChunks = [];
+    // let chunks = [];
     const mediaRecorder = forMedia?.recorder;
-    const ref = useRef();
+    // const recorderChunked = forMedia?.recorderChunked
+    const ref = useRef()
 
     const lookForMatches = (blob) => {
         const data = new FormData()
         data.append("upload_file", blob)
+        console.log(data, "DATA")
         return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
     }
 
@@ -23,31 +26,65 @@ export const RecordMedia = () => {
         // }).catch(err => console.log("error occured....", err))
     }
 
-    const processMedia = () => {
-        ref.current.src = URL.createObjectURL(forMedia?.blob);
+    const processMedia = (chunksData) => {
+        const blob = new Blob(chunksData, { type: "audio/mp3" });
+
+        ref.current.src = URL.createObjectURL(blob);
         ref.current.controls = true;
         ref.current.autoplay = true;
+
+        updateStateVariable({ blob })
+    }
+
+    const onMediaDataAvailable = (mediaRecorder, chunksData) => {
+        mediaRecorder.ondataavailable = evt => {
+            chunksData.push(evt.data);
+            if (mediaRecorder.state === "inactive") {
+                processMedia(chunksData);
+            }
+        }
+    }
+
+    const beginRecordingUserVoice = () => {
+        // const recorderChunked = forMedia?.recorderChunked;
+        // onMediaDataAvailable(recorderChunked, chunks);
+
+        onMediaDataAvailable(mediaRecorder, audioChunks);
     }
 
     const streamHandler = (stream) => {
         const rec = new MediaRecorder(stream)
         updateStateVariable({ recorder: rec })
+        // updateStateVariable({recorder: rec, recorderChunked: rec})
+        // const recDup = new MediaRecorder(stream)
+        // updateStateVariable({recorder: rec, recorderChunked: recDup})
     }
 
     const getAccessToUserMediaDevice = () => {
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => streamHandler(stream))
             .catch(err => console.log(err))
+
+        // no difference same "recording" state gets instilled
+        // navigator.mediaDevices.getUserMedia({ audio: true })
+        //     .then(stream => {
+        //         const recDup = new MediaRecorder(stream);
+        //         updateStateVariable({ recorderChunked: recDup })
+        //     })
     }
 
     const onStart = () => {
         audioChunks = [];
-        mediaRecorder.start(2000)
+        mediaRecorder.start()
+        // recorderChunked.start()
+        beginRecordingUserVoice();
         updateStateVariable({ begin: false })
     }
 
     const onStop = () => {
+        audioChunks = [];
         mediaRecorder.stop()
+        // recorderChunked.stop()
         updateStateVariable({ begin: true })
     }
 
@@ -60,44 +97,45 @@ export const RecordMedia = () => {
         })
     }
 
+    const processMediaForChunked = () => {
+        const blobChunked = new Blob(chunks, { type: "audio/mp3" })
+        updateStateVariable({ blobChunked })
+    }
+
     const runThisEveryPeriodically = () => {
         console.log("!!runing!! __ II")
-        // mediaRecorderChunked.stop()
-        // processMedia()
+        // const recorderChunked = forMedia?.recorderChunked
+
+        // console.log(recorderChunked?.state, "!!chunk state!! -- before")
+        console.log(mediaRecorder?.state, "!!chunk state!! -- before")
+
+        // recorderChunked.stop()
+        // recorderChunked.start()
+        // processMedia(chunks)
+
+        mediaRecorder.stop()
+        processMedia(audioChunks)
+        mediaRecorder.start();
+        // processMediaForChunked();
+
+        // recorderChunked.start();
+
+        console.log(mediaRecorder?.state, "!!chunk state!! -- after")
     }
-
-    const runThisForMediaControlerEvents = () => {
-        mediaRecorder.onstop = (e) => {
-            console.log("data available after MediaRecorder.stop() called.");
-
-            const blob = new Blob(audioChunks, { type: "audio/ogg; codecs=opus" });
-
-            updateStateVariable({ blob })
-
-            console.log("recorder stopped");
-        };
-
-        mediaRecorder.ondataavailable = (e) => {
-            audioChunks.push(e.data);
-        };
-    }
-
-    useEffect(() => {
-        if (mediaRecorder) {
-            runThisForMediaControlerEvents();
-        }
-    }, [mediaRecorder])
 
     useEffect(() => {
         if (forMedia?.blob) {
-            processMedia()
             sendData(forMedia.blob)
+        } else if (forMedia?.blobChunked) {
+            console.log("blob chunked----")
+            sendData(forMedia.blobChunked)
         }
-    }, [forMedia?.blob])
+    }, [forMedia?.blob, forMedia?.blobChunked])
 
     useEffect(() => {
         if (forMedia?.begin === false) {
             const timer = setInterval(runThisEveryPeriodically, 2000)
+
             return () => clearInterval(timer)
         }
     }, [forMedia?.begin])
@@ -107,7 +145,7 @@ export const RecordMedia = () => {
         updateStateVariable({ begin: true })
     }, [])
 
-    console.log(shazamData, forMedia, audioChunks)
+    console.log(shazamData, forMedia)
 
     return (
         <section className='flex flex-col items-center ml-56'>
