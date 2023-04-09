@@ -18,6 +18,7 @@ export const RecordMedia = () => {
 
     const sendData = blob => {
         console.log(blob, "SEND DAT!!")
+        updateStateVariable({safeToSearch: false})
         // lookForMatches(blob).then(data => {
         //     console.log(data?.data?.result, data)
         //     setShazamData(data?.data?.result)
@@ -73,6 +74,10 @@ export const RecordMedia = () => {
         }
     }
 
+    const runPeriodically = () => {
+        updateStateVariable({safeToSearch: true})
+    }
+
     const runThisForMediaControlerEvents = () => {
         mediaRecorder.onstop = (e) => {
             console.log("data available after MediaRecorder.stop() called.");
@@ -105,7 +110,11 @@ export const RecordMedia = () => {
     useEffect(() => {
         if (forMedia?.begin === false) {
             const timer = setInterval(runThisEveryPeriodically, 2000)
-            return () => clearInterval(timer)
+            const timer2 = setInterval(runPeriodically, 20000)
+            return () => {
+                clearInterval(timer)
+                clearInterval(timer2)
+            }
         }
     }, [forMedia?.begin])
 
@@ -120,6 +129,8 @@ export const RecordMedia = () => {
         <div className="w-full flex flex-col items-center">
             <section className='flex flex-col items-center'>
                 <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
+
+                <h3 className={`${forMedia?.safeToSearch ? "none text-white" : "line-through"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3>
 
                 <div className='flex justify-start gap-4 items-center'>
                     <audio className='my-4' ref={ref} src=""></audio>
