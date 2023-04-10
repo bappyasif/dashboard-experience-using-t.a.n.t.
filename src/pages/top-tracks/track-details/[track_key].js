@@ -5,9 +5,12 @@ import Link from 'next/link';
 import React from 'react'
 import { fetchTracks } from '../[countryCode]';
 import { useDashboardCtx } from '@/contexts';
+import { useUserSession } from '@/hooks';
 
 const TrackDetailPage = ({ track_key }) => {
-    const {relatedTracks, handleSongRelatedTracks, country} = useDashboardCtx()
+    const { relatedTracks, handleSongRelatedTracks, country } = useDashboardCtx()
+
+    const { status } = useUserSession()
 
     const manageFetching = () => {
         const url = "/related_tracks"
@@ -19,7 +22,7 @@ const TrackDetailPage = ({ track_key }) => {
         const chkIdx = relatedTracks?.findIndex(item => (item.key == track_key) && (item?.data.length))
 
         if (chkIdx !== -1) {
-            console.log("DONT FETCH DATA")
+            console.log("DONT FETCH")
             return false
         } else {
             setTimeout(() => {
@@ -36,7 +39,7 @@ const TrackDetailPage = ({ track_key }) => {
         enabled: decideFetching(),
         onSuccess: data => {
             handleSongRelatedTracks(data?.data?.result?.tracks, track_key)
-            console.log("data!! success - related tracks!!")
+            // console.log("data!! success - related tracks!!")
         }
     })
 
@@ -44,10 +47,19 @@ const TrackDetailPage = ({ track_key }) => {
 
     return (
         <main className='flex flex-col w-full'>
-            <div className='text-2xl w-full text-center'>TrackDetail -- {track_key}</div>
-            <Link className='text-xl bg-blue-400 px-4 py-1 rounded-lg w-fit' href={`/top-tracks/${country}`}>Go To Tracks List</Link>
-            <TrackDetail track_key={track_key} />
-            <RelatedTracks trackId={track_key} data={relatedTracks} />
+            {
+                status === "loading"
+                    ? <p className='px-2 text-2xl'>Loding Page....</p>
+                    : status === "authenticated"
+                        ?
+                        <>
+                            <div className='text-2xl w-full text-center'>TrackDetail -- {track_key}</div>
+                            <Link className='text-xl bg-blue-400 px-4 py-1 rounded-lg w-fit' href={`/top-tracks/${country}`}>Go To Tracks List</Link>
+                            <TrackDetail track_key={track_key} />
+                            <RelatedTracks trackId={track_key} data={relatedTracks} />
+                        </>
+                        : null
+            }
         </main>
     )
 }

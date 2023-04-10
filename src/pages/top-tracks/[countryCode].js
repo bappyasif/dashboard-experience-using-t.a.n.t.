@@ -1,5 +1,6 @@
 import { TracksList } from '@/components/TracksList'
 import { useDashboardCtx } from '@/contexts'
+import { useUserSession } from '@/hooks'
 import { countriesCodes } from '@/utils/data'
 import { shazamApiInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
@@ -8,7 +9,9 @@ import React from 'react'
 export const fetchTracks = (options) => shazamApiInterceptor(options)
 
 const TopTracksByCountry = ({ countryCode }) => {
-    const {topTracks, handleCountrySpecificTrends} = useDashboardCtx()
+    const { topTracks, handleCountrySpecificTrends } = useDashboardCtx()
+
+    const { status } = useUserSession()
 
     const manageFetching = () => {
         const url = "/top_country_tracks"
@@ -16,13 +19,13 @@ const TopTracksByCountry = ({ countryCode }) => {
         return fetchTracks({ url, params })
     }
 
-    const decideFetching = () => {        
-        if(!topTracks?.length) return true
+    const decideFetching = () => {
+        if (!topTracks?.length) return true
 
         const findCountryTopTracks = topTracks.find(item => item.countryCode == countryCode)
 
         // console.log(findCountryTopTracks, findCountryTopTracks !== undefined, topTracks)
-        
+
         return findCountryTopTracks !== undefined ? false : true
     }
 
@@ -33,7 +36,7 @@ const TopTracksByCountry = ({ countryCode }) => {
         enabled: decideFetching(),
         onSuccess: data => {
             handleCountrySpecificTrends(data?.data?.result?.tracks, countryCode)
-            console.log(data, "data!! success -- Top Tracks")
+            // console.log(data, "data!! success -- Top Tracks")
         }
     })
 
@@ -45,8 +48,17 @@ const TopTracksByCountry = ({ countryCode }) => {
 
     return (
         <main>
-            <div className='text-center text-4xl my-2'>Currently Viewing: Top Tracks In {countriesCodes[countryCode]}</div>
-            <TracksList data={tracks?.data?.result?.tracks} countryCode={countryCode} />
+            {
+                status === "loading"
+                    ? <p className='px-2 text-2xl'>Loding Page....</p>
+                    : status === "authenticated"
+                        ?
+                        <>
+                            <div className='text-center text-4xl my-2'>Currently Viewing: Top Tracks In {countriesCodes[countryCode]}</div>
+                            <TracksList data={tracks?.data?.result?.tracks} countryCode={countryCode} />
+                        </>
+                        : null
+            }
         </main>
     )
 }

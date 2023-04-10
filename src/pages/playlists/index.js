@@ -1,26 +1,30 @@
 import { ShowUserPlaylists } from '@/components/forPlaylists';
 import { useDashboardCtx } from '@/contexts';
-import { useToFetchPlaylists } from '@/hooks';
-import { signIn, useSession } from 'next-auth/react';
-import React, { useEffect } from 'react'
+import { useToFetchPlaylists, useUserSession } from '@/hooks';
+import React from 'react'
 
 const UserPlaylists = () => {
   const { playlists } = useDashboardCtx()
 
-  const { data: session, status } = useSession();
+  const { session, status } = useUserSession()
 
-  const { data } = useToFetchPlaylists()
+  useToFetchPlaylists()
 
   const foundPlaylists = playlists?.find(item => (item?.userId == session?.user?.id) && item?.lists?.length)
 
-  useEffect(() => {
-    status == "unauthenticated" ? signIn() : null
-  }, [status])
-
   return (
     <main className='w-full'>
-      <h1 className='text-6xl bg-blue-200 mb-4'>User Playlists</h1>
-      <ShowUserPlaylists data={foundPlaylists?.lists} />
+      {
+        status === "loading"
+          ? <p className='px-2 text-2xl'>Loding Page....</p>
+          : status === "authenticated"
+            ?
+            <>
+              <h1 className='text-6xl bg-blue-200 mb-4'>User Playlists</h1>
+              <ShowUserPlaylists data={foundPlaylists?.lists} />
+            </>
+            : null
+      }
     </main>
   )
 }

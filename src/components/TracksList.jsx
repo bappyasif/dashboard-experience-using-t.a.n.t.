@@ -28,7 +28,7 @@ export const TracksList = ({ data }) => {
         performAlreadyExistingTopTracksData()
     }, [])
 
-    console.log(tracksData, "ata")
+    // console.log(tracksData, "ata")
 
     const renderTracks = () => (data || tracksData)?.map(track => track?.images && <RenderTrackMinimalView key={track.key} track={track} />)
 

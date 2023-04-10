@@ -2,7 +2,7 @@ import { RenderTrackMinimalView } from '@/components/TracksList'
 import React, { useEffect, useState } from 'react'
 
 export const RenderSongDetails = ({ data }) => {
-  console.log(data, "DATAA!!!")
+  // console.log(data, "DATAA!!!")
   return (
     <section className='flex gap-6 items-center w-full'>
       <RenderTrackMinimalView track={data} fromSearch={true} fromDetect={true} />
@@ -26,7 +26,7 @@ const RenderSongLyrics = ({ item }) => {
     runOnce();
   }, [item])
 
-  console.log(lyrics, "Lyrics!!")
+  // console.log(lyrics, "Lyrics!!")
 
   return (
     <p className='flex flex-col w-full gap-4 flex-wrap overflow-x-scroll' style={{ height: "402px" }}>

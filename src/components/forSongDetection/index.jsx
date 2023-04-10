@@ -131,14 +131,13 @@ export const RecordMedia = () => {
 
     const renderButtons = () => btns?.map(item => <ActionButton key={item.name} item={item} forMedia={forMedia} />)
 
-    console.log(shazamData, forMedia, audioChunks)
+    // console.log(shazamData, forMedia, audioChunks)
 
     return (
         <div className="w-full flex flex-col items-center">
             <section className='flex flex-col items-center'>
                 <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
 
-                {/* <h3 className={`${forMedia?.safeToSearch ? "none text-white" : "line-through"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3> */}
                 <h3 className={`${forMedia?.safeToSearch ? "visible text-white" : "invisible"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3>
 
                 <div className='flex justify-start gap-4 items-center'>

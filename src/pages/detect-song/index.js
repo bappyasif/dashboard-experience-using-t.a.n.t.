@@ -1,17 +1,9 @@
 import { RecordMedia } from '@/components/forSongDetection'
-import { signIn, useSession } from 'next-auth/react'
-import React, { useEffect } from 'react'
+import { useUserSession } from '@/hooks'
+import React from 'react'
 
 const DetectSong = () => {
-  const {status} = useSession()
-
-  // if(status === "loading") {
-  //   return <p className='px-2 text-2xl'>Loding Page....</p>
-  // }
-
-  useEffect(() => {
-    status === "unauthenticated" ? signIn() : null
-  })
+  const {status} = useUserSession()
 
   return (
     <main className='w-full'>

@@ -1,7 +1,6 @@
 import { shazamApiInterceptor } from '@/utils/interceptor';
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext, useRef, useState } from 'react'
-import { AppContext } from './appContext'
+import React, { useRef, useState } from 'react'
 import { ShowPlaylists } from './TracksList';
 import { useWhenClickedOutside } from '@/hooks';
 import { useDashboardCtx } from '@/contexts';
