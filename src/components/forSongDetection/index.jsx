@@ -1,6 +1,7 @@
 import { shazamApiInterceptor } from "@/utils/interceptor"
 import { useEffect, useRef, useState } from "react"
 import { RenderSongDetails } from "./forRendering"
+import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai"
 
 export const RecordMedia = () => {
     const [shazamData, setShazamData] = useState(false)
@@ -18,7 +19,7 @@ export const RecordMedia = () => {
 
     const sendData = blob => {
         console.log(blob, "SEND DAT!!")
-        updateStateVariable({safeToSearch: false})
+        updateStateVariable({ safeToSearch: false })
         // lookForMatches(blob).then(data => {
         //     console.log(data?.data?.result, data)
         //     setShazamData(data?.data?.result)
@@ -75,7 +76,7 @@ export const RecordMedia = () => {
     }
 
     const runPeriodically = () => {
-        updateStateVariable({safeToSearch: true})
+        updateStateVariable({ safeToSearch: true })
     }
 
     const runThisForMediaControlerEvents = () => {
@@ -123,6 +124,13 @@ export const RecordMedia = () => {
         updateStateVariable({ begin: true })
     }, [])
 
+    const btns = [
+        { name: "Start Recording", icon: <AiOutlineAudio />, actionFunction: onStart },
+        { name: "Stop Recording", icon: <AiOutlineAudioMuted />, actionFunction: onStop }
+    ]
+
+    const renderButtons = () => btns?.map(item => <ActionButton key={item.name} item={item} forMedia={forMedia} />)
+
     console.log(shazamData, forMedia, audioChunks)
 
     return (
@@ -130,13 +138,15 @@ export const RecordMedia = () => {
             <section className='flex flex-col items-center'>
                 <h2 className='text-3xl'>Record Your Music By giving Access To Your Microphone and Hit Record :)</h2>
 
-                <h3 className={`${forMedia?.safeToSearch ? "none text-white" : "line-through"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3>
+                {/* <h3 className={`${forMedia?.safeToSearch ? "none text-white" : "line-through"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3> */}
+                <h3 className={`${forMedia?.safeToSearch ? "visible text-white" : "invisible"}`}>Safe Amount (at least 20 seconds) Has Been Recorded, Hit Stop To Begin Search</h3>
 
                 <div className='flex justify-start gap-4 items-center'>
                     <audio className='my-4' ref={ref} src=""></audio>
                     <p className='flex gap-4 my-4'>
-                        <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}>Record</button>
-                        <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}>Stop</button>
+                        {renderButtons()}
+                        {/* <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}><AiOutlineAudio /></button>
+                        <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}><AiOutlineAudioMuted /></button> */}
                     </p>
                 </div>
 
@@ -148,6 +158,50 @@ export const RecordMedia = () => {
                     ? <RenderSongDetails data={shazamData} />
                     : null
             }
+        </div>
+    )
+}
+
+const ActionButton = ({ item, forMedia }) => {
+    const [tooltip, setTooltip] = useState("");
+
+    const { name, icon, actionFunction } = item;
+
+    const decideConditional = () => forMedia?.begin && name === "Start Recording" || !forMedia?.begin && name === "Stop Recording"
+
+    const handleHoverIn = () => {
+        if (decideConditional()) {
+            setTooltip(name)
+        }
+    }
+
+    const handleHoverOut = () => setTooltip("")
+
+    useEffect(() => {
+        setTooltip("")
+    }, [item])
+
+    return (
+        <div
+            onTouchStart={handleHoverIn}
+            onTouchEnd={handleHoverOut}
+            onMouseEnter={handleHoverIn}
+            onMouseLeave={handleHoverOut}
+        >
+            <button
+                className={
+                    `${decideConditional() ? "animate-pulse" : ""} bg text-2xl w-2/4 p-4 
+                  text-teal-900 ${decideConditional() ? "bg-blue-400" : "bg-slate-400"} 
+                    rounded-lg flex items-baseline gap-4 w-fit relative`
+                    // hover:${tooltip !== "" ? "text-yellow-400" : "text-white"}
+                }
+                onClick={actionFunction}
+                disabled={!decideConditional()}
+            >
+                {/* <span>{name}</span> */}
+                {icon}
+            </button>
+            {tooltip === name ? <p className="absolute px-2 bg-blue-200 rounded-sm">Click To {name}</p> : null}
         </div>
     )
 }
