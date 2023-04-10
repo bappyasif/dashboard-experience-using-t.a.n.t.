@@ -143,11 +143,9 @@ export const RecordMedia = () => {
 
                 <div className='flex justify-start gap-4 items-center'>
                     <audio className='my-4' ref={ref} src=""></audio>
-                    <p className='flex gap-4 my-4'>
+                    <div className='flex gap-4 my-4'>
                         {renderButtons()}
-                        {/* <button className={`${forMedia?.begin ? "animate-pulse" : null} bg text-2xl w-2/4 p-4 text-teal-900 ${forMedia?.begin ? "bg-blue-400" : "bg-slate-400"} rounded-lg hover:${!forMedia?.begin ? null : "text-white"}`} onClick={onStart} disabled={!forMedia?.begin}><AiOutlineAudio /></button>
-                        <button className={`${!forMedia?.begin ? "animate-pulse" : null} text-2xl w-3/4 p-4 text-red-900 ${!forMedia?.begin ? "bg-yellow-200" : "bg-zinc-400"} rounded-lg hover:text-slate-600`} onClick={onStop} disabled={forMedia.begin}><AiOutlineAudioMuted /></button> */}
-                    </p>
+                    </div>
                 </div>
 
                 <hr />
