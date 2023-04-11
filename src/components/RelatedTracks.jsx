@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { RenderTrackMinimalView } from './TracksList'
 
 export const RelatedTracks = ({ data, trackId }) => {

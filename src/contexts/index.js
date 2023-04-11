@@ -98,6 +98,8 @@ export const DashboardContextProvider = ({ children }) => {
     const handleCountrySpecificTrends = (data, countryCode) => {
         const updatedList = data ? (state.topTracks || []).concat({ data, countryCode }) : state.topTracks
 
+        console.log(updatedList, "updatedList")
+
         dispatchFunction(ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY, updatedList, "topTracks")
     }
 
@@ -141,8 +143,8 @@ export const DashboardContextProvider = ({ children }) => {
 export const useDashboardCtx = () => {
     const ctx = useContext(DashboardContext);
 
-    if(ctx === undefined) {
-        throw new Error ("context is not found!!")
+    if (ctx === undefined) {
+        throw new Error("context is not found!!")
     }
 
     return ctx

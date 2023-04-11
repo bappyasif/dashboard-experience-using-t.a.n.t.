@@ -2,11 +2,11 @@ import { TracksList } from '@/components/TracksList'
 import { useDashboardCtx } from '@/contexts'
 import { useUserSession } from '@/hooks'
 import { countriesCodes } from '@/utils/data'
-import { shazamApiInterceptor } from '@/utils/interceptor'
+import { shazamApiDojoInterceptor, shazamApiHubInterceptor, shazamApiInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
-export const fetchTracks = (options) => shazamApiInterceptor(options)
+export const fetchTracks = (options) => shazamApiDojoInterceptor(options)
 
 const TopTracksByCountry = ({ countryCode }) => {
     const { topTracks, handleCountrySpecificTrends } = useDashboardCtx()
@@ -14,8 +14,9 @@ const TopTracksByCountry = ({ countryCode }) => {
     const { status } = useUserSession()
 
     const manageFetching = () => {
-        const url = "/top_country_tracks"
-        const params = { country_code: countryCode, limit: '100', start_from: '0' }
+        // const url = "/track/top/country"
+        const url = "/charts/track"
+        const params = { country_code: countryCode, limit: '100' }
         return fetchTracks({ url, params })
     }
 
@@ -35,8 +36,8 @@ const TopTracksByCountry = ({ countryCode }) => {
         refetchOnWindowFocus: false,
         enabled: decideFetching(),
         onSuccess: data => {
-            handleCountrySpecificTrends(data?.data?.result?.tracks, countryCode)
-            // console.log(data, "data!! success -- Top Tracks")
+            handleCountrySpecificTrends(data?.data?.tracks, countryCode)
+            console.log(data, "data!! success -- Top Tracks", data?.data?.tracks, countryCode)
         }
     })
 

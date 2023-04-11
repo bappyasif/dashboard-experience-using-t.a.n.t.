@@ -1,17 +1,41 @@
 import { AppContext } from '@/components/appContext'
 import { useDashboardCtx } from '@/contexts'
-import { internalApiRequest, shazamApiInterceptor } from '@/utils/interceptor'
+import { internalApiRequest, shazamApiDojoInterceptor, shazamApiInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
 import { signIn, useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 
-const beginFetch = (options) => shazamApiInterceptor(options)
+// const beginFetch = (options) => shazamApiInterceptor(options)
+
+// export function useFetchSearchData(url, query, type, handleSearch, decideRefetching) {
+//   const { handleSearchedInfoData } = useDashboardCtx()
+
+//   const fetchTracks = () => {
+//     const params = { query: query, limit: '20', start_from: '0', lang: '-' }
+//     return beginFetch({ url, params })
+//   }
+
+//   const { data } = useQuery({
+//     queryKey: [`search ${type}`, `${query}`],
+//     queryFn: fetchTracks,
+//     refetchOnWindowFocus: false,
+//     enabled: decideRefetching(),
+//     onSuccess: data => {
+//       handleSearch()
+//       data?.data?.result?.hits && handleSearchedInfoData(type, query, data?.data?.result?.hits)
+//     }
+//   })
+
+//   return data?.data?.result?.hits
+// }
+
+const beginFetch = (options) => shazamApiDojoInterceptor(options)
 
 export function useFetchSearchData(url, query, type, handleSearch, decideRefetching) {
   const { handleSearchedInfoData } = useDashboardCtx()
 
   const fetchTracks = () => {
-    const params = { query: query, limit: '20', start_from: '0', lang: '-' }
+    const params = { term: query, limit: '20', offset: '0' }
     return beginFetch({ url, params })
   }
 
@@ -21,8 +45,12 @@ export function useFetchSearchData(url, query, type, handleSearch, decideRefetch
     refetchOnWindowFocus: false,
     enabled: decideRefetching(),
     onSuccess: data => {
-      handleSearch()
-      data?.data?.result?.hits && handleSearchedInfoData(type, query, data?.data?.result?.hits)
+      handleSearch();
+      if(type === "Track") {
+        data?.data?.tracks?.hits?.length && handleSearchedInfoData(type, query, data?.data?.tracks?.hits)
+      } else if(type === "Artist") {
+        data?.data?.artists?.hits?.length && handleSearchedInfoData(type, query, data?.data?.artists?.hits)
+      }
     }
   })
 

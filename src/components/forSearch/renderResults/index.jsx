@@ -21,7 +21,7 @@ const SearchArtists = ({query, type, handleSearch, ready}) => {
 
     // console.log(query, type, ready);
 
-    const data = useFetchSearchData("/search_artist", query, type, handleSearch, decideRefetching2)
+    const data = useFetchSearchData("/search", query, type, handleSearch, decideRefetching2)
 
     console.log("DATA SEARCHED For Artist!!")
 
@@ -54,7 +54,7 @@ const RenderArtist = ({item}) => {
 const decideRefetching = (stateVar, ready, dataset, setDataset, type, query) => {
     if (ready) {
         const found = stateVar?.find(item => item.type === type && item.query === query && item.data?.length)
-        // console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
+        console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
         
         if (found) {
             !dataset.length && setDataset(found?.data)
@@ -72,12 +72,14 @@ const SearchTracks = ({ query, type, handleSearch, ready }) => {
 
     const decideRefetching2 = () => decideRefetching(searchedData, ready, dataset, setDataset, type, query)
 
-    const data = useFetchSearchData("/search_track", query, type, handleSearch, decideRefetching2)
+    const data = useFetchSearchData("/search", query, type, handleSearch, decideRefetching2)
 
     useEffect(() => {
         data?.length && setDataset([])
         data?.length && setDataset(data)
     }, [data])
+
+    console.log(searchedData, "searchedData")
 
     const renderTracks = () => (dataset || data)?.map((item, idx) => item?.track?.images && <RenderTrackMinimalView key={idx} track={item?.track} fromSearch={true} />)
 

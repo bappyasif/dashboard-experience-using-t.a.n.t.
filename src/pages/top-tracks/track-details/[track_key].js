@@ -6,6 +6,9 @@ import React from 'react'
 import { fetchTracks } from '../[countryCode]';
 import { useDashboardCtx } from '@/contexts';
 import { useUserSession } from '@/hooks';
+// import { shazamApiHubInterceptor } from '@/utils/interceptor';
+
+// export const fetchTracks = (options) => shazam(options)
 
 const TrackDetailPage = ({ track_key }) => {
     const { relatedTracks, handleSongRelatedTracks, country } = useDashboardCtx()
@@ -13,8 +16,9 @@ const TrackDetailPage = ({ track_key }) => {
     const { status } = useUserSession()
 
     const manageFetching = () => {
-        const url = "/related_tracks"
-        const params = { track_id: track_key, limit: '20', start_from: '0' }
+        const url = "/shazam-songs/list-similarities"
+        const params = { id: `track-similarities-id-${track_key}`, locale: `${country}`}
+        console.log({url, params}, "<><>")
         return fetchTracks({ url, params })
     }
 
@@ -32,14 +36,33 @@ const TrackDetailPage = ({ track_key }) => {
         }
     }
 
+    const formatData = (data) => {
+        const formatedData = [];
+
+        // console.log(data, "before")
+
+        for(let key in data) {
+            // console.log("before", data[key], data[key]?.attributes)
+            const attr = data[key]?.attributes
+            if(attr) {
+                formatedData?.push(attr)
+            }
+        }
+
+        console.log(formatedData, "formatted datya")
+        return formatedData
+    }
+
     const { data } = useQuery({
         queryKey: ["related tracks", `${track_key}`],
         queryFn: manageFetching,
         refetchOnWindowFocus: false,
         enabled: decideFetching(),
         onSuccess: data => {
-            handleSongRelatedTracks(data?.data?.result?.tracks, track_key)
-            // console.log("data!! success - related tracks!!")
+            handleSongRelatedTracks(formatData(data?.data?.resources["shazam-songs"]), track_key) 
+            // handleSongRelatedTracks(data?.data?.resources?.shazam-songs, track_key) 
+            // handleSongRelatedTracks(data?.data?.result?.tracks, track_key)
+            console.log(data?.data?.resources["shazam-songs"], "data!! success - related tracks!!", data)
         }
     })
 

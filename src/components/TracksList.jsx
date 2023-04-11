@@ -12,6 +12,7 @@ export const TracksList = ({ data }) => {
     const {topTracks, country} = useDashboardCtx()
 
     const performAlreadyExistingTopTracksData = () => {
+        // console.log(topTracks, "topTracks!!")
         const findCountryTopTracks = topTracks?.find(item => item.countryCode == country)
         if (findCountryTopTracks !== undefined) {
             setTracksData(findCountryTopTracks.data)
@@ -26,9 +27,7 @@ export const TracksList = ({ data }) => {
 
     useEffect(() => {
         performAlreadyExistingTopTracksData()
-    }, [])
-
-    // console.log(tracksData, "ata")
+    }, [topTracks, country])
 
     const renderTracks = () => (data || tracksData)?.map(track => track?.images && <RenderTrackMinimalView key={track.key} track={track} />)
 
@@ -49,21 +48,22 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist, fromDe
     const ref = useRef()
     useWhenClickedOutside(ref, () => setShow(false));
 
-    const { images, subtitle, title, key, url } = track
-    const { background, coverart } = images
+    const { images, subtitle, title, key, webUrl } = track
+    // const { background, coverart } = images
+    const { background, coverart, artistAvatar, coverArt } = images
 
     return (
         <article ref={ref} className={`${fromPlaylist ? "w-full" : fromDetect ? "w-1/2" : "w-1/4"} flex flex-col justify-between relative bg-stone-200 p-1 rounded-lg`} style={{ height: fromPlaylist ? "317px" : !fromPlaylist && fromSearch ? "418px" : "472px" }}>
             <div className='bg-teal-200 px-4 mb-1 rounded-md text-xl font-bold text-center'>
                 {
                     fromSearch
-                        ? <a target={"_blank"} className='' href={`${url}`}>{fromPlaylist ? "Listen To This Track" : "Click To Listen To This Track"}</a>
-                        : <Link className='' href={`/top-tracks/track-details/${key}`}>Click To See More Details</Link>
+                        ? <a target={"_blank"} href={`${webUrl}`}>{fromPlaylist ? "Listen To This Track" : "Click To Listen To This Track"}</a>
+                        : <Link href={`/top-tracks/track-details/${key}`}>Click To See More Details</Link>
                 }
             </div>
 
             <img
-                src={background || coverart}
+                src={artistAvatar || coverArt ||  background || coverart}
                 style={{ maxHeight: fromPlaylist ? "301px" : "324px" }}
             />
             <p className={`text-2xl overflow-hidden text-ellipsis ${fromSearch ? "text-center" : ""}`} style={{

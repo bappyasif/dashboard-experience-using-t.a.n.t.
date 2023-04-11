@@ -1,4 +1,4 @@
-import { shazamApiInterceptor } from '@/utils/interceptor';
+import { shazamApiHubInterceptor, shazamApiInterceptor } from '@/utils/interceptor';
 import { useQuery } from '@tanstack/react-query';
 import React, { useRef, useState } from 'react'
 import { ShowPlaylists } from './TracksList';
@@ -18,7 +18,7 @@ const TrackDetail = ({ track_key }) => {
         queryKey: ["search track details", `${track_key}`],
         queryFn: () => {
             const params = { track_id: `${track_key}` }
-            return shazamApiInterceptor({ url: "/track_about", params })
+            return shazamApiHubInterceptor({ url: "/track_about", params })
         },
         refetchOnWindowFocus: false,
         enabled: false
@@ -59,12 +59,12 @@ const RenderShareInfo = ({ share, trackId }) => {
     
     useWhenClickedOutside(ref, () => setShow(false));
 
-    const { href, html, image, snapchat } = share
+    const { href, html, avatar, snapchat } = share
 
     return (
         <div className='flex pb-4'>
             <div className='relative' ref={ref}>
-                <img src={image} />
+                <img src={avatar} />
                 <div className='flex gap-1 flex-col text-xl'>
                     <a className='bg-blue-200 rounded-md' href={snapchat}>Open Track In SnapChat</a>
                     <a className='bg-blue-200 rounded-md' href={href}>Listen To This Track</a>
@@ -86,7 +86,7 @@ const RenderShareInfo = ({ share, trackId }) => {
 
 const RenderHubInfo = ({ hub, url, share }) => {
     const { actions, displayname, explicit, name } = hub
-    const { uri } = actions[1]
+    // const { uri } = actions[1] || null
 
     // console.log(explicit, uri, name, "WHHWHWHW")
 
@@ -100,7 +100,7 @@ const RenderHubInfo = ({ hub, url, share }) => {
             <h2>Music Hub: <span className='text-2xl'>{displayname}</span></h2>
             <h4>Explicit Content: <span className='text-2xl'>{explicit ? "Include" : "None"}</span></h4>
             <div className='flex flex-col gap-2 text-2xl'>
-                <a className='bg-blue-200 h-fit px-2 py-1 rounded-sm' href={uri}>Open in: <span className='text-2xl'>{name || displayname}</span></a>
+                <a className='bg-blue-200 h-fit px-2 py-1 rounded-sm' href={url}>Open in: <span className='text-2xl'>{name || displayname}</span></a>
                 <a className='bg-blue-200 h-fit px-2 py-1 rounded-sm' href={url}>Open Track In Shazam</a>
             </div>
         </div>
