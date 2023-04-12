@@ -42,6 +42,11 @@ export const shazamApiDiyorInterceptor = ({...options}) => {
     return externalApiHedersAndCallBacks(client, "shazam-api6.p.rapidapi.com", options)
 }
 
+export const shazamSongRecognitionInterceptor = ({...options}) => {
+    const client = axios.create({baseURL: "https://song-recognition.p.rapidapi.com"});
+    return externalApiHedersAndCallBacks(client, "song-recognition.p.rapidapi.com", options)
+}
+
 export const internalApiRequest = ({...options}) => {
     const client = axios.create({baseURL: "http://localhost:3000/api"})
     

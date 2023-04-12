@@ -1,4 +1,4 @@
-import { shazamApiInterceptor } from "@/utils/interceptor"
+import { shazamApiDiyorInterceptor, shazamApiDojoInterceptor, shazamApiHubInterceptor, shazamApiInterceptor, shazamSongRecognitionInterceptor } from "@/utils/interceptor"
 import { useEffect, useRef, useState } from "react"
 import { RenderSongDetails } from "./forRendering"
 import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai"
@@ -12,17 +12,88 @@ export const RecordMedia = () => {
     const ref = useRef();
 
     const lookForMatches = (blob) => {
-        const data = new FormData()
-        data.append("upload_file", blob)
-        return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
+        // const data = new FormData()
+        // data.append('data', JSON.stringify(blob));
+        // data.append("upload_file", blob)
+        // data.append("data", blob)
+        // data.append("key1", blob)
+        // data.append("upload_file", fs.createReadStream(blob))
+        // return shazamApiDiyorInterceptor({ url: "/shazam/recognize/", data: data, method: "POST" })
+        // return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data: data, method: "POST" })
+        // return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data: `${blob}`, method: "POST" })
+        // return shazamApiHubInterceptor({ url: "/track/recognize", data: `${blob}`, method: "POST", headers: { "Content-Type": "application/octet-stream" } })
+        // return shazamApiHubInterceptor({ url: "/track/recognize", data: `${data}`, method: "POST", headers: { "Content-Type": "text/plain" } })
+        // return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data: `${data}`, method: "POST", headers: { "Content-Type": "text/plain" } })
+        return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data: `${blob}`, method: "POST", headers: { "Content-Type": "text/plain" } })
+        // return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data, method: "POST" })
+        // return shazamApiHubInterceptor({ url: "/track/recognize", data: {"key1" : blob}, method: "POST" })
+        // return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
     }
 
     const sendData = blob => {
         console.log(blob, "SEND DAT!!")
         updateStateVariable({ safeToSearch: false })
+
+        // processRecordedAudioData(blob)
+        // convertBlobToBase64(blob).then(v => {
+        //     console.log(v)
+        //     lookForMatches(v).then(data => {
+        //         console.log(data?.data?.result, data)
+        //         // setShazamData(data?.data?.result)
+        //     }).catch(err => console.log("error occured....", err))
+        // })
+
         // lookForMatches(blob).then(data => {
         //     console.log(data?.data?.result, data)
-        //     setShazamData(data?.data?.result)
+        //     // setShazamData(data?.data?.result)
+        // }).catch(err => console.log("error occured....", err))
+
+        // processRecordedAudioData(blob).then(text => {
+        //     console.log(text, "TEST!!")
+        //     lookForMatches(text).then(data => {
+        //         console.log(data?.data?.result, data)
+        //         // setShazamData(data?.data?.result)
+        //     }).catch(err => console.log("error occured....", err))
+        // })
+
+        // const test = processRecordedAudioData(blob).then(text => {
+        //     console.log(text, "TEST!!")
+        //     lookForMatches(text).then(data => {
+        //         console.log(data?.data?.result, data)
+        //         // setShazamData(data?.data?.result)
+        //     }).catch(err => console.log("error occured....", err))
+        // })
+        // console.log(test, "TEST!!")
+        // lookForMatches(blob).then(data => {
+        //     console.log(data?.data?.result, data)
+        //     // setShazamData(data?.data?.result)
+        // }).catch(err => console.log("error occured....", err))
+    }
+
+    const fetchForMatches = blob => {
+        const data = new FormData();
+        data.append("file", blob)
+        // data.append("upload_file", blob)
+        // return shazamApiHubInterceptor({ url: "/track/recognize", data: `${blob}`, method: "POST", headers: { "Content-Type": "application/octet-stream" } })
+        // return shazamApiDojoInterceptor({ url: "/songs/v2/detect", data: `${blob}`, method: "POST", headers: { "Content-Type": "text/plain" } })
+        // return shazamApiDiyorInterceptor({url: "/shazam/recognize/", data: data})
+        return shazamSongRecognitionInterceptor({url: "/song/detect", data})
+    }
+
+    const beginFetch = (blob) => {
+        updateStateVariable({ safeToSearch: false })
+        
+        convertBlobToBase64(blob).then(v => {
+            console.log(v)
+            // fetchForMatches(v).then(data => {
+            //     console.log(data?.data?.result, data)
+            //     // setShazamData(data?.data?.result)
+            // }).catch(err => console.log("error occured....", err))
+        })
+        
+        // fetchForMatches(blob).then(data => {
+        //     console.log(data?.data?.result, data)
+        //     // setShazamData(data?.data?.result)
         // }).catch(err => console.log("error occured....", err))
     }
 
@@ -104,7 +175,8 @@ export const RecordMedia = () => {
     useEffect(() => {
         if (forMedia?.blob) {
             processMedia()
-            sendData(forMedia.blob)
+            // sendData(forMedia.blob)
+            beginFetch(forMedia.blob)
         }
     }, [forMedia?.blob])
 
@@ -201,4 +273,25 @@ const ActionButton = ({ item, forMedia }) => {
             {tooltip === name ? <p className="absolute px-2 bg-blue-200 rounded-sm">Click To {name}</p> : null}
         </div>
     )
+}
+
+export const convertBlobToBase64 = blob => new Promise((resolve, reject) => {
+    const reader = new FileReader;
+    reader.onerror = reject;
+    reader.onload = () => {
+        resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+});
+
+
+const processRecordedAudioData = (blob) => {
+    const reader = new FileReader()
+    // reader.readAsBinaryString(blob) and use btoa(reader.result) to get the Base64 string
+    // const buffers = reader.readAsArrayBuffer(blob);
+    // const b64 = reader.result(buffers)
+    // console.log(b64, "B^$!!!!!!!!!!!!!!!!")
+    // reader.readAsArrayBuffer(blob)
+    return new Response(blob).text().then(text => text.toString()).catch(err => console.log("error....", err))
+    // new Response(blob).text().then(text => console.log(text, "<<<<<WHATWHAT!!>>>>>>", text.toString())).catch(err => console.log("error....", err))
 }
