@@ -26,7 +26,7 @@ export const DashboardContextProvider = ({ children }) => {
         let updatedList = null
 
         if (userPlaylists === undefined) {
-            updatedList = state.playlists.concat({ userId, lists: [newData] })
+            updatedList = (state?.playlists || []).concat({ userId, lists: [newData] })
         } else {
             if (chk === -1 && newList?.length) {
                 updatedList = state.playlists.concat({ userId: userId, lists: newList })
@@ -98,7 +98,7 @@ export const DashboardContextProvider = ({ children }) => {
     const handleCountrySpecificTrends = (data, countryCode) => {
         const updatedList = data ? (state.topTracks || []).concat({ data, countryCode }) : state.topTracks
 
-        console.log(updatedList, "updatedList")
+        // console.log(updatedList, "updatedList")
 
         dispatchFunction(ACTIONS.ADD_TOP_TRACKS_FOR_SPECIFIC_COUNTRY, updatedList, "topTracks")
     }

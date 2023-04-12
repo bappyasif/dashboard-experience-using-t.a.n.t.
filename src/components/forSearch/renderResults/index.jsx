@@ -54,7 +54,7 @@ const RenderArtist = ({item}) => {
 const decideRefetching = (stateVar, ready, dataset, setDataset, type, query) => {
     if (ready) {
         const found = stateVar?.find(item => item.type === type && item.query === query && item.data?.length)
-        console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
+        // console.log(found, "FOUND!!", stateVar, ready, !dataset.length, dataset.length)
         
         if (found) {
             !dataset.length && setDataset(found?.data)
@@ -79,7 +79,7 @@ const SearchTracks = ({ query, type, handleSearch, ready }) => {
         data?.length && setDataset(data)
     }, [data])
 
-    console.log(searchedData, "searchedData")
+    // console.log(searchedData, "searchedData")
 
     const renderTracks = () => (dataset || data)?.map((item, idx) => item?.track?.images && <RenderTrackMinimalView key={idx} track={item?.track} fromSearch={true} />)
 

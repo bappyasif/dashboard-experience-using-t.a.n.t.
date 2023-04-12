@@ -37,7 +37,7 @@ const TopTracksByCountry = ({ countryCode }) => {
         enabled: decideFetching(),
         onSuccess: data => {
             handleCountrySpecificTrends(data?.data?.tracks, countryCode)
-            console.log(data, "data!! success -- Top Tracks", data?.data?.tracks, countryCode)
+            // console.log(data, "data!! success -- Top Tracks", data?.data?.tracks, countryCode)
         }
     })
 
