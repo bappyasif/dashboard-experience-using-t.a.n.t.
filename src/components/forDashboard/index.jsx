@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react'
-import { AppContext } from '../appContext'
+import React, { useEffect } from 'react'
 import { countriesCodes } from "../../utils/data"
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';

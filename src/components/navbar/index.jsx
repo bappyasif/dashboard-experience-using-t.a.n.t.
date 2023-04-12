@@ -38,11 +38,11 @@ const navs = [
         path: "/",
         icon: <AiOutlineHome />
     },
-    {
-        name: "Detect Song",
-        path: "/detect-song",
-        icon: <AiOutlineRadarChart />
-    },
+    // {
+    //     name: "Detect Song",
+    //     path: "/detect-song",
+    //     icon: <AiOutlineRadarChart />
+    // },
     {
         name: "Top Tracks",
         path: "/top-tracks",

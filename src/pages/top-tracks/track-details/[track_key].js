@@ -6,9 +6,6 @@ import React from 'react'
 import { fetchTracks } from '../[countryCode]';
 import { useDashboardCtx } from '@/contexts';
 import { useUserSession } from '@/hooks';
-// import { shazamApiHubInterceptor } from '@/utils/interceptor';
-
-// export const fetchTracks = (options) => shazam(options)
 
 const TrackDetailPage = ({ track_key }) => {
     const { relatedTracks, handleSongRelatedTracks, country } = useDashboardCtx()
@@ -49,7 +46,7 @@ const TrackDetailPage = ({ track_key }) => {
             }
         }
 
-        console.log(formatedData, "formatted datya")
+        // console.log(formatedData, "formatted datya")
         return formatedData
     }
 
@@ -59,10 +56,8 @@ const TrackDetailPage = ({ track_key }) => {
         refetchOnWindowFocus: false,
         enabled: decideFetching(),
         onSuccess: data => {
-            handleSongRelatedTracks(formatData(data?.data?.resources["shazam-songs"]), track_key) 
-            // handleSongRelatedTracks(data?.data?.resources?.shazam-songs, track_key) 
-            // handleSongRelatedTracks(data?.data?.result?.tracks, track_key)
-            console.log(data?.data?.resources["shazam-songs"], "data!! success - related tracks!!", data)
+            handleSongRelatedTracks(formatData(data?.data?.resources["shazam-songs"]), track_key)
+            // console.log(data?.data?.resources["shazam-songs"], "data!! success - related tracks!!", data)
         }
     })
 

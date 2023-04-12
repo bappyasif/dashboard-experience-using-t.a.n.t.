@@ -3,6 +3,7 @@
 // import playlist from "@/model/playlist"
 import connectMongo from "../../utils/connectMongo"
 import userPlaylist from "@/model/userPlaylist";
+import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
 
 // make sure database is connected otherwise this will face buffereing time error
@@ -14,9 +15,10 @@ export default async function handler (req, res) {
     // clientPromise.then(() => console.log("Database connected!")).catch(err => console.log(err));
 
     const session = await getSession({req})
+    // const session = await getServerSession(req, res)
 
     if(!session) {
-        console.log("unauthorized user!!")
+        console.log("unauthorized user!!", session)
         return res.status(401).json({msg: "un-authorized user"})
     }
 
