@@ -23,17 +23,21 @@ export const DashboardContextProvider = ({ children }) => {
 
         const newList = chk === -1 ? userPlaylists?.lists.push(newData) : [newData];
 
-        let updatedList = null
+        let updatedList = (state?.playlists || []);
 
         if (userPlaylists === undefined) {
-            updatedList = (state?.playlists || []).concat({ userId, lists: [newData] })
+            // updatedList = (state?.playlists || []).concat({ userId, lists: [newData] })
+            updatedList = updatedList.concat({ userId, lists: [newData] })
         } else {
             if (chk === -1 && newList?.length) {
-                updatedList = state.playlists.concat({ userId: userId, lists: newList })
+                // updatedList = state.playlists.concat({ userId: userId, lists: newList })
+                updatedList = updatedList.concat({ userId: userId, lists: newList })
             }
         }
 
-        dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
+        // console.log(state.playlists, "when created", updatedList, "newli8st", newList, "chk", chk)
+
+        updatedList && dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }
 
     const handleRemoveUserPlaylist = (userId, playlistName) => {
@@ -43,6 +47,8 @@ export const DashboardContextProvider = ({ children }) => {
             }
             return item
         })
+
+        // console.log(state.playlists, "when deleted", updatedList)
 
         dispatchFunction(ACTIONS.UPDATE_PLAYLIST, updatedList, "playlists")
     }

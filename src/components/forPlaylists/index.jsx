@@ -83,7 +83,7 @@ const RenderTrack = ({ keyId, name, tracks }) => {
 }
 
 const RenderNameCard = ({ name, url }) => {
-  const { handleRemoveFromPlaylist } = useDashboardCtx()
+  const { handleRemoveUserPlaylist } = useDashboardCtx()
   const { data: session } = useSession()
   const { id } = session?.user
 
@@ -96,7 +96,8 @@ const RenderNameCard = ({ name, url }) => {
 
   const handleDelete = () => {
     deletePlaylistFromDb().then(() => {
-      handleRemoveFromPlaylist(id, name)
+      handleRemoveUserPlaylist(id, name)
+      console.log("deleted playlist....")
     }).catch(err => console.log("error occured....", err))
   }
 

@@ -130,16 +130,18 @@ const PlayListUserInput = ({ closeCreateNew }) => {
 
         const response = internalApiRequest({ url: "/playlists", method: "POST", data: JSON.stringify({ name: text, userId: id }), headers: { "Content-Type": "application/json" } })
 
-        response.then(() => console.log("data sent to server"))
+        // response.then(() => console.log("user playlist created successfully"))
+        return response;
     }
 
     const handleCreate = () => {
         const { id } = session?.user
         const data = { name: text }
 
-        handleAddNewPlaylist(data, id)
-
-        sendDataToDb()
+        sendDataToDb().then(() => {
+            handleAddNewPlaylist(data, id)
+            console.log("user playlist created successfully")
+        })
         closeCreateNew()
     }
 

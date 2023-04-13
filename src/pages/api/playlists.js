@@ -4,7 +4,7 @@
 import connectMongo from "../../utils/connectMongo"
 import userPlaylist from "@/model/userPlaylist";
 import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
+import { authOptions } from "./auth/[...nextauth]";
 
 // make sure database is connected otherwise this will face buffereing time error
 export default async function handler (req, res) {
@@ -14,27 +14,33 @@ export default async function handler (req, res) {
 
     // clientPromise.then(() => console.log("Database connected!")).catch(err => console.log(err));
 
-    const session = await getSession({req})
-    // const session = await getServerSession(req, res)
+    // const session = await getSession({req})
+    const session = await getServerSession(req, res, authOptions)
+
+    // await connectMongo();
 
     if(!session) {
         console.log("unauthorized user!!", session)
         return res.status(401).json({msg: "un-authorized user"})
-    }
+    } 
+    // else {
+    //     console.log("authorized user!!", session)
+    //     // return res.status(401).json({msg: "authorized user"})
+    // }
 
     await connectMongo();
 
     if(req.method === "POST") {
         const {name, userId} = req.body;
 
-        const test = new userPlaylist({
+        const newPlaylist = new userPlaylist({
             name: name, 
             userId: userId
         })
     
-        test.save()
+        newPlaylist.save()
 
-        return res.status(200).json({test})
+        return res.status(200).json({newPlaylist, msg: "successfully created user playlist"})
 
     } else if (req.method === "PUT") {
         const { userId, name, trackId} = req.body
@@ -49,7 +55,10 @@ export default async function handler (req, res) {
             }
         }
 
-        userPlaylist.findByIdAndUpdate(userPlaylists._id, userPlaylists, {}).then(() => console.log("updated!!")).catch(err=>console.log(err))
+        userPlaylist.findByIdAndUpdate(userPlaylists._id, userPlaylists, {}).then(() => {
+            console.log("updated!!")
+            return res.status(200).json({msg: "playlist updated"})
+        }).catch(err=>console.log(err))
     } else if(req.method === "GET") {
         const {userId} = req.query;
 
@@ -66,17 +75,24 @@ export default async function handler (req, res) {
         
         if(delPlist) {
             userPlaylist.findOneAndDelete({name: name})
-            .then(() => console.log("Playlist deleted....")).catch(err => console.log(err))
+            .then(() => {
+                console.log("Playlist deleted....")
+                return res.status(200).json({msg: "playlist deleted"})
+
+            }).catch(err => console.log(err))
         } else {
             userPlaylist.findOne({name: name}).then(doc => {
                 const newList = doc?.tracks.filter(v => v != trackId)
                 doc.tracks = newList;
                 userPlaylist.findByIdAndUpdate(doc._id, doc, {})
-                .then(() => console.log("track deleted")).catch(()=> console.log("after delete update failed"))
+                .then(() => {
+                    console.log("track deleted")
+                    return res.status(200).json({msg: "track deleted"})
+                }).catch(()=> console.log("after delete update failed"))
             }).catch(err => console.log(err))
         }
         
-        res.status(200).json({msg: "'t is levend"})
+        // res.status(200).json({msg: "'t is levend"})
     } else {
         res.status(200).json({msg: "'t is levend"})
     }
