@@ -2,6 +2,8 @@ import { shazamApiInterceptor } from "@/utils/interceptor"
 import { useEffect, useRef, useState } from "react"
 import { RenderSongDetails } from "./forRendering"
 import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai"
+import { shazamApiDiyorInterceptor } from "@/utils/interceptor"
+import { shazamApiDojoInterceptor } from "@/utils/interceptor"
 
 export const RecordMedia = () => {
     const [shazamData, setShazamData] = useState(false)
@@ -12,14 +14,43 @@ export const RecordMedia = () => {
     const ref = useRef();
 
     const lookForMatches = (blob) => {
-        const data = new FormData()
-        data.append("upload_file", blob)
-        return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
+        // const data = new FormData()
+        // data.append("upload_file", blob)
+        return shazamApiDojoInterceptor({ url: "/songs/detect", data: `${blob}`, method: "post" })
+        // return shazamApiInterceptor({ url: "/recognize", data: data, method: "post" })
+        // return shazamApiDiyorInterceptor({ url: "/shazam/recognize/", data: data, method: "post" })
+        // return shazamApiDiyorInterceptor({ url: "/shazam/recognize/", data: data, method: "post", headers: {...blob.getHeaders()} })
+    }
+
+    const referenceCode = (blob) => {
+        // const inputRawFile = ".../clinteastwood_portion_mono.raw";
+        const byteArray = readFile(blob);
+        const base64Str = Base64.getEncoder().encodeToString(byteArray);
+        console.log(base64Str, "base64Str")
+        // try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(".../clinteastwood_portion_mono.txt"), StandardCharsets.UTF_8)) { out.write(base64Str); }
     }
 
     const sendData = blob => {
+        // const reader = new FileReader()
+        // reader.readAsArrayBuffer(blob)
+        // reader.onload = () => {
+        //     console.log(reader.result)
+        //     lookForMatches(reader.result).then(data => {
+        //         console.log(data?.data?.result, data)
+        //         // setShazamData(data?.data?.result)
+        //     }).catch(err => console.log("error occured....", err))
+
+        // }
         console.log(blob, "SEND DAT!!")
         updateStateVariable({ safeToSearch: false })
+        blobToBase64(blob, lookForMatches).then((v) => {
+            console.log(v, "!!")
+            // lookForMatches(v)
+            lookForMatches(v).then(data => {
+                console.log(data?.data?.result, data)
+                // setShazamData(data?.data?.result)
+            }).catch(err => console.log("error occured....", err))
+        })
         // lookForMatches(blob).then(data => {
         //     console.log(data?.data?.result, data)
         //     setShazamData(data?.data?.result)
@@ -33,13 +64,23 @@ export const RecordMedia = () => {
     }
 
     const streamHandler = (stream) => {
-        const rec = new MediaRecorder(stream)
+        const rec = new MediaRecorder(stream, { mimeType: "", })
         updateStateVariable({ recorder: rec })
     }
 
     const getAccessToUserMediaDevice = () => {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => streamHandler(stream))
+        const constraints = {
+            channelCount: 1,
+            sampleRate: 44100,
+            sampleSize: 16
+        }
+        // navigator.mediaDevices.getUserMedia({ audio: true})
+        navigator.mediaDevices.getUserMedia({audio: constraints})
+            .then(stream => {
+                streamHandler(stream)
+                // let track = stream.getAudioTracks()[0];
+                // console.log(track.getCapabilities(), "capabilities");
+            })
             .catch(err => console.log(err))
     }
 
@@ -202,3 +243,21 @@ const ActionButton = ({ item, forMedia }) => {
         </div>
     )
 }
+
+function blobToBase64(blob) {
+    return new Promise((resolve, _) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  }
+
+//   var blobToBase64 = function(blob, callback) {
+//     var reader = new FileReader();
+//     reader.onload = function() {
+//         var dataUrl = reader.result;
+//         var base64 = dataUrl.split(',')[1];
+//         callback(base64);
+//     };
+//     reader.readAsDataURL(blob);
+// };
