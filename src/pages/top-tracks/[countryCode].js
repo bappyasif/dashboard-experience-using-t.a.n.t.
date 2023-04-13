@@ -2,19 +2,18 @@ import { TracksList } from '@/components/TracksList'
 import { useDashboardCtx } from '@/contexts'
 import { useUserSession } from '@/hooks'
 import { countriesCodes } from '@/utils/data'
-import { shazamApiDojoInterceptor, shazamApiHubInterceptor, shazamApiInterceptor } from '@/utils/interceptor'
+import { shazamApiDojoInterceptor } from '@/utils/interceptor'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
 export const fetchTracks = (options) => shazamApiDojoInterceptor(options)
 
 const TopTracksByCountry = ({ countryCode }) => {
-    const { topTracks, handleCountrySpecificTrends } = useDashboardCtx()
+    const { topTracks, handleCountrySpecificTrends, handleUpdateCountryName } = useDashboardCtx()
 
     const { status } = useUserSession()
 
     const manageFetching = () => {
-        // const url = "/track/top/country"
         const url = "/charts/track"
         const params = { country_code: countryCode, limit: '100' }
         return fetchTracks({ url, params })
@@ -37,6 +36,7 @@ const TopTracksByCountry = ({ countryCode }) => {
         enabled: decideFetching(),
         onSuccess: data => {
             handleCountrySpecificTrends(data?.data?.tracks, countryCode)
+            handleUpdateCountryName(countryCode)
             // console.log(data, "data!! success -- Top Tracks", data?.data?.tracks, countryCode)
         }
     })
@@ -44,8 +44,6 @@ const TopTracksByCountry = ({ countryCode }) => {
     if (isError) {
         return <h2>Error Occured.... {error.message}</h2>
     }
-
-    // console.log(appCtx.country != countryCode, appCtx.country, countryCode, "checks!!")
 
     return (
         <main>
