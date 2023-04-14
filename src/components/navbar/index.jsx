@@ -9,7 +9,13 @@ export const Navbar = () => {
     const renderNavs = () => navs.map(item => <RenderNav key={item.name} item={item} status={status} />)
 
     return (
-        <nav className='flex flex-col gap-1'>
+        <nav 
+            className='flex flex-col gap-1 min-h-full z-10'
+            style={{
+                backgroundImage: `url(${"/clouds.jpg"})`,
+                height: "100vh"
+            }}
+        >
             {renderNavs()}
         </nav>
     )

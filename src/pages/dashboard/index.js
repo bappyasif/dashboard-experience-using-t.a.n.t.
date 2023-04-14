@@ -1,9 +1,11 @@
 import { AlreadyExistingPlaylistsByThisUser, TrendingLists } from '@/components/forDashboard';
-import { useUserSession } from '@/hooks';
+import { useToFetchPlaylists, useUserSession } from '@/hooks';
 import React from 'react'
 
 const UserDashboard = () => {
   const { session, status } = useUserSession();
+
+  useToFetchPlaylists()
 
   return (
     <main className='text-xl w-full'>
