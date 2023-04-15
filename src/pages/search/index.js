@@ -19,7 +19,7 @@ const SearchThings = () => {
 
     return (
         <main>
-            <div>SearchThings</div>
+            <div className='text-4xl text-indigo-200 mb-2'>Search Artist Or Tracks</div>
             <div className='flex gap-4 text-4xl'>
                 <SelectWhichSearchType handleWhichSearchType={handleWhichSearchType} />
                 <InputElement handleSearchText={handleSearchText} searchType={searchFor?.type} />

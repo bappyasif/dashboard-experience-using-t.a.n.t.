@@ -53,7 +53,7 @@ const TopTracksByCountry = ({ countryCode }) => {
                     : status === "authenticated"
                         ?
                         <>
-                            <div className='text-center text-4xl my-2'>Currently Viewing: Top Tracks In {countriesCodes[countryCode]}</div>
+                            <div className='text-center text-4xl text-fuchsia-950 bg-stone-400 my-2 mb-4 px-4'>Currently Viewing: Top Tracks In {countriesCodes[countryCode]}</div>
                             <TracksList data={tracks?.data?.result?.tracks} countryCode={countryCode} />
                         </>
                         : null

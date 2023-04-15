@@ -104,7 +104,7 @@ const RenderNameCard = ({ name, url }) => {
   return (
     <div className='w-1/2 h-min'>
       <div className='flex justify-between w-full items-center'>
-        <h2 className='text-4xl text-sky-900'>{name}</h2>
+        <h2 className='text-4xl text-sky-400'>{name}</h2>
         <button onClick={handleDelete} className='text-lg font-bold flex gap-2 items-center px-2 py-0 bg-neutral-400 text-red-800 rounded-lg mr-0'>
           <AiOutlineDelete fontSize={"22px"} />
           <span>Delete Playlist</span>

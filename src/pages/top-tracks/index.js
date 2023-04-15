@@ -24,7 +24,7 @@ const TopTracksByCountry = () => {
                     : status === "authenticated"
                         ?
                         <>
-                            <div>TopTracks</div>
+                            <div className='text-fuchsia-200'>Trending Tracks</div>
                             <SelectCountry handleCountryChange={handleCountryChange} />
                         </>
                         : null

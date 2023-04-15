@@ -9,11 +9,12 @@ export const Navbar = () => {
     const renderNavs = () => navs.map(item => <RenderNav key={item.name} item={item} status={status} />)
 
     return (
-        <nav 
+        <nav
             className='flex flex-col gap-1 min-h-full z-10'
             style={{
-                backgroundImage: `url(${"/clouds.jpg"})`,
-                height: "100vh"
+                // backgroundImage: `url(${"/clouds.jpg"})`,
+                backgroundImage: `url(${"/comm.jpg"})`,
+                minHeight: "100vh"
             }}
         >
             {renderNavs()}
@@ -30,7 +31,16 @@ const RenderNav = ({ item }) => {
             ||
             status === "authenticated" && name !== "Sign In"
             ?
-            < Link href={path} className="text-2xl bg-zinc-400 p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max" >
+            < Link
+                href={path}
+                className="text-2xl text-gray-800 bg-zinc-400 p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max"
+                style={{
+                    backgroundImage: `url(${"/clouds.jpg"})`,
+                    // backgroundImage: `url(${"/studio.jpg"})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat"
+                }}
+            >
                 <span>{name}</span>
                 <span>{icon}</span>
             </Link >

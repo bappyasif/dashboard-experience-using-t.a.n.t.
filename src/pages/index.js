@@ -17,7 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main
-        className='text-2xl w-full h-full z-10'
+        className='text-2xl w-full h-full text-cyan-400'
         style={{
           // backgroundImage: `url(${"/concert.jpg"})`
         }}
@@ -31,12 +31,12 @@ export default function Home() {
         /> */}
         <h1 className='text-6xl my-4'>Welcome :)</h1>
         <div
-          className='flex flex-col gap-4'
+          className='flex flex-col gap-4 text-4xl'
         >
-          <h2>You can Search About <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/search"}>Songs</Link> Or <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/search"}>Artists</Link></h2>
-          <h2>You can See Trending <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/top-tracks"}>Songs</Link> By Country, If You Are Signed In</h2>
-          <h2>You can See Your Already Stored <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/playlists"}>Playlists</Link>, If You Are Signed In</h2>
-          <h2>You can See Your <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/dashboard"}>Dashboard</Link>, If You Are Signed In</h2>
+          <h2>You can Search About <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/search"}>Songs</Link> Or <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/search"}>Artists</Link></h2>
+          <h2>You can See Trending <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/top-tracks"}>Songs</Link> By Country, If You Are Signed In</h2>
+          <h2>You can See Your Already Stored <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/playlists"}>Playlists</Link>, If You Are Signed In</h2>
+          <h2>You can See Your <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/dashboard"}>Dashboard</Link>, If You Are Signed In</h2>
         </div>
       </main>
     </>

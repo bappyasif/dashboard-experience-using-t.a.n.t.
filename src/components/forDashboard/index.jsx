@@ -29,12 +29,12 @@ export const TrendingLists = () => {
 }
 
 const RenderTopTracksLink = () => {
-  return <span>lets change that from <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/top-tracks"}>here</Link></span>
+  return <span>lets change that from <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/top-tracks"}>here</Link></span>
 }
 
 const ShowWhenNoTrendingListVisited = () => {
   return (
-    <div className='text-2xl'>
+    <div className='text-2xl text-cyan-400'>
       <p>you havent visited any trending songs list from any country yet</p>
       <RenderTopTracksLink />
     </div>
@@ -76,7 +76,7 @@ export const AlreadyExistingPlaylistsByThisUser = ({ session }) => {
 
 export const ShowWhenNoPlaylistIsFoundOrCreated = () => {
   return (
-    <div className='text-2xl'>
+    <div className='text-2xl text-cyan-400'>
       <p>you havent created any playlist from any trending lists yet</p>
       <RenderTopTracksLink />
     </div>
@@ -88,8 +88,8 @@ const RenderPlaylistMinimumView = ({ item }) => {
 
   return (
     <div>
-      <h2>Playlist: <span className='bg-teal-200 font-bold px-2'>{name}</span></h2>
-      <p>Tracks: <span className='bg-teal-200 font-bold px-2'>{tracks?.length}</span></p>
+      <h2><span className='text-cyan-200'>Playlist:</span> <span className='bg-teal-200 font-bold px-2'>{name}</span></h2>
+      <p><span className='text-cyan-200'>Tracks:</span> <span className='bg-teal-200 font-bold px-2'>{tracks?.length}</span></p>
       <p className='flex flex-col gap-2'>
         <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/playlists"}>See Details About Playlists</Link>
         <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/top-tracks"}>Add More Tracks From Trending Lists</Link>

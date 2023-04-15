@@ -5,7 +5,7 @@ export const SelectWhichSearchType = ({ handleWhichSearchType }) => {
     return (
         <>
             {/* <div>SelectWhichSearchType</div> */}
-            <select className='bg-transparent outline-1 outline-blue-200 outline' onChange={e => handleWhichSearchType(e.target.value)} name="choose search type" id="search_type">
+            <select className='text-indigo-800 bg-neutral-400 outline-1 outline-blue-200 outline' onChange={e => handleWhichSearchType(e.target.value)} name="choose search type" id="search_type">
                 <option value="-1">Choose Search Type</option>
                 {renderTypes()}
             </select>
@@ -28,7 +28,7 @@ export const InputElement = ({handleSearchText, searchType}) => {
     }
     return (
         <input
-            className={`${searchType == -1 ? "bg-red-200" : "bg-transparent"} outline-1 outline-blue-200 outline`} 
+            className={`text-indigo-800 ${searchType == -1 ? "bg-red-200" : "bg-stone-400"} outline-1 outline-blue-200 outline`} 
             type={"text"}
             onChange={e => handleSearchText(e)}
             placeholder={decidePlaceholderText()}
