@@ -33,12 +33,24 @@ export default function Home() {
         <div
           className='flex flex-col gap-4 text-4xl'
         >
-          <h2>You can Search About <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/search"}>Songs</Link> Or <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/search"}>Artists</Link></h2>
-          <h2>You can See Trending <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/top-tracks"}>Songs</Link> By Country, If You Are Signed In</h2>
-          <h2>You can See Your Already Stored <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/playlists"}>Playlists</Link>, If You Are Signed In</h2>
-          <h2>You can See Your <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/dashboard"}>Dashboard</Link>, If You Are Signed In</h2>
+          <h2>You can Search About <RenderLink name={"Songs"} path={"/search"} /> Or <RenderLink name={"Artists"} path={"/search"} /> </h2>
+          <h2>You can See <RenderLink name={"Trending Songs"} path={"/top-tracks"} /> By Country, If You Are Signed In</h2>
+          <h2>You can See Your Already Stored <RenderLink name={"Playlists"} path={"/playlists"} />, If You Are Signed In</h2>
+          <h2>You can See Your <RenderLink name={"Dashboard"} path={"/dashboard"} />, If You Are Signed In</h2>
         </div>
       </main>
     </>
+  )
+}
+
+export const RenderLink = ({name, path}) => {
+  return (
+    <Link 
+      className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit
+      hover:bg-slate-600 hover:text-stone-200' 
+      href={path}
+      >
+        {name}      
+      </Link>
   )
 }

@@ -54,7 +54,12 @@ const RenderNav = ({ item, handleActive, activeNow }) => {
             ?
             < Link
                 href={path}
-                className={`text-2xl text-gray-${activeNow === name ? "200" : "800"} ${activeNow == name ? "bg-white" : "bg-zinc-400"} p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max`}
+                className={`text-gray-${activeNow === name ? "200" : "800"} 
+                ${activeNow == name ? "bg-white" : "bg-zinc-400"} 
+                text-2xl p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max
+                hover:bg-slate-${activeNow !== name ? "600" : ""} hover:text-${activeNow !== name ? "white" : ""}
+                `
+            }
                 style={{
                     // backgroundImage: `url(${"/clouds.jpg"})`,
                     // backgroundImage: `url(${"/studio.jpg"})`,

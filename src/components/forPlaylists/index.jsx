@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { ShowWhenNoPlaylistIsFoundOrCreated } from '../forDashboard'
 import { useDashboardCtx } from '@/contexts'
+import Image from 'next/image'
+import concert from "../../../public/concert.jpg"
 
 export const ShowUserPlaylists = ({ data }) => {
   const renderLists = () => data?.map((item, idx) => <RenderPlaylist key={item.name + idx} item={item} />)
@@ -110,10 +112,15 @@ const RenderNameCard = ({ name, url }) => {
           <span>Delete Playlist</span>
         </button>
       </div>
-      <img
+      {/* <img
         className='w-full'
         src={url || "https://source.unsplash.com/random"}
         style={{ maxHeight: "290px" }}
+      /> */}
+      <Image
+        src={concert}
+        alt='concert stock image from unsplash for playlist image'
+        height={290}
       />
     </div>
   )

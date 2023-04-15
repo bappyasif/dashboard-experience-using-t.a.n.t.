@@ -50,7 +50,8 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist, fromDe
 
     const { images, subtitle, title, key, webUrl } = track
     // const { background, coverart } = images
-    const { background, coverart, artistAvatar, coverArt } = images
+    // const { background, coverart, artistAvatar, coverArt } = images
+    const { artistAvatar, coverArt } = images
 
     return (
         <article ref={ref} className={`${fromPlaylist ? "w-full" : fromDetect ? "w-1/2" : "w-1/4"} flex flex-col justify-between relative bg-stone-200 p-1 rounded-lg`} style={{ height: fromPlaylist ? "317px" : !fromPlaylist && fromSearch ? "418px" : "472px" }}>
@@ -63,7 +64,7 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist, fromDe
             </div>
 
             <img
-                src={artistAvatar || coverArt ||  background || coverart}
+                src={artistAvatar || coverArt}
                 style={{ maxHeight: fromPlaylist ? "301px" : "324px" }}
             />
             <p className={`text-2xl overflow-hidden text-ellipsis ${fromSearch ? "text-center" : ""}`} style={{

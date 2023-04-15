@@ -3,6 +3,7 @@ import { countriesCodes } from "../../utils/data"
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useDashboardCtx } from '@/contexts';
+import { RenderLink } from '@/pages';
 
 export const TrendingLists = () => {
   const {topTracks} = useDashboardCtx()
@@ -29,13 +30,13 @@ export const TrendingLists = () => {
 }
 
 const RenderTopTracksLink = () => {
-  return <span>lets change that from <Link className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit' href={"/top-tracks"}>here</Link></span>
+  return <span>lets change that from <RenderLink path={"/top-tracks"} name={"here"} /></span>
 }
 
 const ShowWhenNoTrendingListVisited = () => {
   return (
     <div className='text-2xl text-cyan-400'>
-      <p>you havent visited any trending songs list from any country yet</p>
+      <p>You havent visited any trending songs list from any country yet</p>
       <RenderTopTracksLink />
     </div>
   )
@@ -48,10 +49,16 @@ const CountryListsDetails = ({ item }) => {
 
   return (
     <div className='text-2xl my-2 mb-6'>
-      <h2><span>{countriesCodes[countryCode]}</span></h2>
+      <h2 className='bg-zinc-800 text-zinc-200 w-fit opacity-90'><span>{countriesCodes[countryCode]}</span></h2>
       <div><span className='text-6xl'>{getFlagEmoji(countryCode)}</span></div>
-      <h2>Trending Songs: <span>{data?.length}*</span></h2>
-      <Link className='bg-stone-200 px-4 rounded-full' href={`/top-tracks/${countryCode}`}>Visit Again And See This Trending List By Clicking Here</Link>
+      <h2 className='bg-zinc-800 text-zinc-200 w-fit opacity-90 mb-2'>Trending Songs: <span>{data?.length}*</span></h2>
+      {/* <Link className='bg-stone-200 px-4 rounded-full' href={`/top-tracks/${countryCode}`}>Visit Again And See This Trending List By Clicking Here</Link> */}
+      {/* <div className='bg-zinc-800 text-zinc-200 w-fit opacity-90'>Visit Again And See This Trending List By Clicking <RenderLink path={`/top-tracks/${countryCode}`} name={"Here"} /> </div> */}
+      <RenderDashBoardLink 
+        text={"Visit Again And See This Trending List By Clicking"}
+        path={`/top-tracks/${countryCode}`}
+        linkText={"here"}
+      />
     </div>
   )
 }
@@ -91,9 +98,32 @@ const RenderPlaylistMinimumView = ({ item }) => {
       <h2><span className='text-cyan-200'>Playlist:</span> <span className='bg-teal-200 font-bold px-2'>{name}</span></h2>
       <p><span className='text-cyan-200'>Tracks:</span> <span className='bg-teal-200 font-bold px-2'>{tracks?.length}</span></p>
       <p className='flex flex-col gap-2'>
-        <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/playlists"}>See Details About Playlists</Link>
-        <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/top-tracks"}>Add More Tracks From Trending Lists</Link>
+        {/* <div className='bg-zinc-800 text-zinc-200 w-fit opacity-90'>See Details About <RenderLink path={"/playlists"} name={"Playlists"} /> </div> */}
+        {/* <RenderLink path={"/playlists"} name={"See Details About Playlists"} /> */}
+        {/* <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/playlists"}>Playlists</Link> */}
+        {/* <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/top-tracks"}>Add More Tracks From Trending Lists</Link> */}
+        {/* <div className='bg-zinc-800 text-zinc-200 w-fit opacity-90'>Add More Tracks From <RenderLink path={"/top-tracks"} name={"Trending Songs"} /> List</div> */}
+        
+        <RenderDashBoardLink 
+          text={"See Details About"}
+          extraText={""}
+          path={"/playlists"}
+          linkText={"Playlists"}
+        />
+
+        <RenderDashBoardLink 
+          text={"Add More Tracks From"}
+          extraText={"List"}
+          path={"/top-tracks"}
+          linkText={"Trending Songs"}
+        />
       </p>
     </div>
+  )
+}
+
+const RenderDashBoardLink = ({text, extraText, path, linkText}) => {
+  return (
+    <div className='bg-zinc-800 text-zinc-200 w-fit opacity-90'>{text} <RenderLink path={path} name={linkText} /> {extraText}</div>   
   )
 }
