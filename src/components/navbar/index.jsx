@@ -1,12 +1,33 @@
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch, AiOutlineLogin, AiOutlineLogout, AiOutlineDashboard, AiOutlineHome, AiOutlineRise, AiOutlineDeploymentUnit, AiOutlineRadarChart } from "react-icons/ai"
 
 export const Navbar = () => {
+    const [activeNow, setActiveNow] = useState("");
     const { status } = useSession();
 
-    const renderNavs = () => navs.map(item => <RenderNav key={item.name} item={item} status={status} />)
+    const handleActive = name => setActiveNow(name);
+
+    const router = useRouter()
+
+    const handleWhichRouteActive = () => {
+        const getPathName = router.pathname;
+        const findName = navs.find(item => item.path === getPathName)
+
+        if(findName?.name) {
+            handleActive(findName.name)
+        }
+        // console.log(findName, getPathName)
+    }
+
+    useEffect(() => {
+        // console.log(router.pathname, router.pathname.split("/"))
+        handleWhichRouteActive()
+    }, [router.pathname])
+
+    const renderNavs = () => navs.map(item => <RenderNav key={item.name} activeNow={activeNow} handleActive={handleActive} item={item} status={status} />)
 
     return (
         <nav
@@ -22,7 +43,7 @@ export const Navbar = () => {
     )
 }
 
-const RenderNav = ({ item }) => {
+const RenderNav = ({ item, handleActive, activeNow }) => {
     const { name, path, icon } = item;
     const { status } = useSession()
 
@@ -33,13 +54,14 @@ const RenderNav = ({ item }) => {
             ?
             < Link
                 href={path}
-                className="text-2xl text-gray-800 bg-zinc-400 p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max"
+                className={`text-2xl text-gray-${activeNow === name ? "200" : "800"} ${activeNow == name ? "bg-white" : "bg-zinc-400"} p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max`}
                 style={{
-                    backgroundImage: `url(${"/clouds.jpg"})`,
+                    // backgroundImage: `url(${"/clouds.jpg"})`,
                     // backgroundImage: `url(${"/studio.jpg"})`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat"
                 }}
+                onClick={() => handleActive(name)}
             >
                 <span>{name}</span>
                 <span>{icon}</span>
