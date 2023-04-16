@@ -17,7 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main
-        className='text-2xl w-full h-full text-cyan-400'
+        className='text-2xl w-full h-full text-indigo-200'
         style={{
           // backgroundImage: `url(${"/concert.jpg"})`
         }}

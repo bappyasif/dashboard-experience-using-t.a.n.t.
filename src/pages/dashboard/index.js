@@ -16,7 +16,7 @@ const UserDashboard = () => {
             ?
             <>
               <h1 className='text-5xl text-indigo-300'>Dear {session?.user?.name}</h1>
-              <h2 className='text-4xl text-sky-400'>Welcome to your dashboard</h2>
+              <h2 className='text-4xl text-indigo-200'>Welcome to your dashboard</h2>
               {/* <h2 className='text-2xl'>Things You Can Do From Here</h2> */}
               <h2 className='text-3xl bg-blue-200 my-4'>Trending Tracks By Country Which Has Already Been Viewed</h2>
               <TrendingLists />

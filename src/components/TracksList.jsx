@@ -48,23 +48,25 @@ export const RenderTrackMinimalView = ({ track, fromSearch, fromPlaylist, fromDe
     const ref = useRef()
     useWhenClickedOutside(ref, () => setShow(false));
 
-    const { images, subtitle, title, key, webUrl } = track
+    const { images, subtitle, title, key, webUrl, url } = track
     // const { background, coverart } = images
     // const { background, coverart, artistAvatar, coverArt } = images
-    const { artistAvatar, coverArt } = images
+    const { background, artistAvatar, coverArt } = images
+    // console.log(images)
+    // console.log(track, webUrl)
 
     return (
         <article ref={ref} className={`${fromPlaylist ? "w-full" : fromDetect ? "w-1/2" : "w-1/4"} flex flex-col justify-between relative bg-stone-200 p-1 rounded-lg`} style={{ height: fromPlaylist ? "317px" : !fromPlaylist && fromSearch ? "418px" : "472px" }}>
             <div className='bg-teal-200 px-4 mb-1 rounded-md text-xl font-bold text-center'>
                 {
                     fromSearch
-                        ? <a target={"_blank"} href={`${webUrl}`}>{fromPlaylist ? "Listen To This Track" : "Click To Listen To This Track"}</a>
+                        ? <a target={"_blank"} href={`${webUrl || url}`}>{fromPlaylist ? "Listen To This Track" : "Click To Listen To This Track"}</a>
                         : <Link href={`/top-tracks/track-details/${key}`}>Click To See More Details</Link>
                 }
             </div>
 
             <img
-                src={artistAvatar || coverArt}
+                src={background || artistAvatar || coverArt}
                 style={{ maxHeight: fromPlaylist ? "301px" : "324px" }}
             />
             <p className={`text-2xl overflow-hidden text-ellipsis ${fromSearch ? "text-center" : ""}`} style={{

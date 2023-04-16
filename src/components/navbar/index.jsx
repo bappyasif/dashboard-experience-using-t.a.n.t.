@@ -34,7 +34,7 @@ export const Navbar = () => {
             className='flex flex-col gap-1 min-h-full z-10'
             style={{
                 // backgroundImage: `url(${"/clouds.jpg"})`,
-                backgroundImage: `url(${"/comm.jpg"})`,
+                // backgroundImage: `url(${"/comm.jpg"})`,
                 minHeight: "100vh"
             }}
         >

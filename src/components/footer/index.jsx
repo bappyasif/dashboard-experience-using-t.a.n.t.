@@ -9,11 +9,11 @@ export const Footer = () => {
       style={{
         // backgroundImage: `url(${"/footer.jpg"})`,
         // backgroundSize: "contain"
-        height: "150px"
+        height: "80px"
       }}
       >
         {/* Footer */}
-        <Image className='w-full' src={footer} alt='footer' style={{height: "150px"}} />
+        <Image className='w-full' src={footer} alt='footer' style={{height: "78px"}} />
       </div>
   )
 }

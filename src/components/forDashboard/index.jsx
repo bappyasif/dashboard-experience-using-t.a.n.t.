@@ -35,7 +35,7 @@ const RenderTopTracksLink = () => {
 
 const ShowWhenNoTrendingListVisited = () => {
   return (
-    <div className='text-2xl text-cyan-400'>
+    <div className='text-2xl text-slate-200'>
       <p>You havent visited any trending songs list from any country yet</p>
       <RenderTopTracksLink />
     </div>
@@ -83,7 +83,7 @@ export const AlreadyExistingPlaylistsByThisUser = ({ session }) => {
 
 export const ShowWhenNoPlaylistIsFoundOrCreated = () => {
   return (
-    <div className='text-2xl text-cyan-400'>
+    <div className='text-2xl text-slate-200'>
       <p>you havent created any playlist from any trending lists yet</p>
       <RenderTopTracksLink />
     </div>
@@ -97,7 +97,7 @@ const RenderPlaylistMinimumView = ({ item }) => {
     <div>
       <h2><span className='text-cyan-200'>Playlist:</span> <span className='bg-teal-200 font-bold px-2'>{name}</span></h2>
       <p><span className='text-cyan-200'>Tracks:</span> <span className='bg-teal-200 font-bold px-2'>{tracks?.length}</span></p>
-      <p className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2'>
         {/* <div className='bg-zinc-800 text-zinc-200 w-fit opacity-90'>See Details About <RenderLink path={"/playlists"} name={"Playlists"} /> </div> */}
         {/* <RenderLink path={"/playlists"} name={"See Details About Playlists"} /> */}
         {/* <Link className='bg-stone-200 px-4 rounded-full w-fit' href={"/playlists"}>Playlists</Link> */}
@@ -117,7 +117,7 @@ const RenderPlaylistMinimumView = ({ item }) => {
           path={"/top-tracks"}
           linkText={"Trending Songs"}
         />
-      </p>
+      </div>
     </div>
   )
 }
