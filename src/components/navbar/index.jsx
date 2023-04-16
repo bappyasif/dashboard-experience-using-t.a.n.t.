@@ -57,15 +57,16 @@ const RenderNav = ({ item, handleActive, activeNow }) => {
                 className={`text-gray-${activeNow === name ? "200" : "800"} 
                 ${activeNow == name ? "bg-white" : "bg-zinc-400"} 
                 text-2xl p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max
-                hover:bg-slate-${activeNow !== name ? "600" : ""} hover:text-${activeNow !== name ? "white" : ""}
+                hover:bg-slate-${activeNow !== name ? "600" : ""} 
+                hover:text-${activeNow === name ? "" : "white"}
                 `
             }
-                style={{
-                    // backgroundImage: `url(${"/clouds.jpg"})`,
-                    // backgroundImage: `url(${"/studio.jpg"})`,
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat"
-                }}
+                // style={{
+                //     // backgroundImage: `url(${"/clouds.jpg"})`,
+                //     // backgroundImage: `url(${"/studio.jpg"})`,
+                //     backgroundSize: "cover",
+                //     backgroundRepeat: "no-repeat"
+                // }}
                 onClick={() => handleActive(name)}
             >
                 <span>{name}</span>

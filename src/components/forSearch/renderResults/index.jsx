@@ -4,6 +4,7 @@ import { RenderTrackMinimalView } from "../../TracksList"
 import { useDashboardCtx } from '@/contexts'
 
 export const PrepareForDataRendering = ({ type, query, handleSearch, ready }) => {
+    console.log(ready, "ready!!")
     return (
         <>
             {type === "Track" && query ? <SearchTracks query={query} type={type} handleSearch={handleSearch} ready={ready} /> : null}
@@ -75,11 +76,29 @@ const SearchTracks = ({ query, type, handleSearch, ready }) => {
     const data = useFetchSearchData("/search", query, type, handleSearch, decideRefetching2)
 
     useEffect(() => {
-        data?.length && setDataset([])
+        // data?.length && setDataset([])
         data?.length && setDataset(data)
     }, [data])
 
+    // useEffect(() => {
+    //     if(ready) {
+    //         setDataset([])
+    //     }
+    // }, [ready, dataset])
+
+    const findNewlySearchedData = () => {
+        const found = searchedData?.find(item => item.type === type && item.query === query && item.data?.length)
+        if(found) {
+            setDataset(found?.data)
+        }
+    }
+
+    useEffect(() => {
+        !ready && findNewlySearchedData()
+    }, [ready, searchedData])
+
     // console.log(searchedData, "searchedData")
+    console.log(dataset, "Dataset!!", data, searchedData, searchedData[query])
 
     const renderTracks = () => (dataset || data)?.map((item, idx) => item?.track?.images && <RenderTrackMinimalView key={idx} track={item?.track} fromSearch={true} />)
 
