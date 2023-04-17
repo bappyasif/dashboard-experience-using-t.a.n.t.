@@ -47,7 +47,7 @@ export const RenderLink = ({name, path}) => {
   return (
     <Link 
       className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit
-      hover:bg-slate-600 hover:text-stone-200' 
+      hover:bg-slate-600 hover:text-violet-200' 
       href={path}
       >
         {name}      
