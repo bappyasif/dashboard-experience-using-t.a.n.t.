@@ -88,7 +88,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background-color: slategray;
+  /* background-color: slategray; */
+  /* background-color: green; */
   /* background-image: url("https://unsplash.com/random");
   background-size: cover; */
   /* background: url("https://source.unsplash.com/vZlTg_McCDo/1600x900"); */
@@ -96,7 +97,10 @@ body {
   /* background: url("https://source.unsplash.com/jAWfDKxRraI/1600x900"); */
   /* background: url("https://source.unsplash.com/wmyE5IBiOmo/1600x900"); */
   /* background: url("https://source.unsplash.com/aDu5aedOoD8/1600x900"); */
-  background: url("https://source.unsplash.com/rqWoB4LFgmc/1600x900");
+  /* background: url("https://source.unsplash.com/rqWoB4LFgmc/1600x900"); */
+  /* background: url("https://source.unsplash.com/Se5cwIoUbzE/1600x900"); */
+  background: url("https://source.unsplash.com/50bzI1F6urA/1600x900");
+  /* background: url("https://source.unsplash.com/wKTF65TcReY/1600x900"); */
   background-size: cover;
 }
 

@@ -17,7 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main
-        className='text-2xl w-full h-full text-indigo-200'
+        className='text-2xl w-full h-full text-neutral-900'
         style={{
           // backgroundImage: `url(${"/concert.jpg"})`
         }}
@@ -29,14 +29,14 @@ export default function Home() {
           alt='poster'
           style={{zIndex: "0", height: "100%"}} 
         /> */}
-        <h1 className='text-6xl my-4'>Welcome :)</h1>
+        <h1 className='text-6xl my-4 bg-stone-200 w-fit opacity-60'>Welcome :)</h1>
         <div
           className='flex flex-col gap-4 text-4xl'
         >
-          <h2>You can Search About <RenderLink name={"Songs"} path={"/search"} /> Or <RenderLink name={"Artists"} path={"/search"} /> </h2>
-          <h2>You can See <RenderLink name={"Trending Songs"} path={"/top-tracks"} /> By Country, If You Are Signed In</h2>
-          <h2>You can See Your Already Stored <RenderLink name={"Playlists"} path={"/playlists"} />, If You Are Signed In</h2>
-          <h2>You can See Your <RenderLink name={"Dashboard"} path={"/dashboard"} />, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-60'>You can Search About <RenderLink name={"Songs"} path={"/search"} /> Or <RenderLink name={"Artists"} path={"/search"} /> </h2>
+          <h2 className='bg-stone-200 w-fit opacity-60'>You can See <RenderLink name={"Trending Songs"} path={"/top-tracks"} /> By Country, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-60'>You can See Your Already Stored <RenderLink name={"Playlists"} path={"/playlists"} />, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-60'>You can See Your <RenderLink name={"Dashboard"} path={"/dashboard"} />, If You Are Signed In</h2>
         </div>
       </main>
     </>
@@ -46,7 +46,7 @@ export default function Home() {
 export const RenderLink = ({name, path}) => {
   return (
     <Link 
-      className='bg-stone-200 text-zinc-600 px-4 rounded-full w-fit
+      className='bg-stone-400 text-zinc-950 px-4 rounded-full w-fit
       hover:bg-slate-600 hover:text-violet-200' 
       href={path}
       >
