@@ -1,5 +1,6 @@
 import React from 'react'
-import footer from "../../../public/footer.jpg"
+// import footer from "../../../public/footer.jpg"
+import footer from "../../../public/foterResu.png"
 import Image from 'next/image'
 
 export const Footer = () => {
@@ -13,7 +14,7 @@ export const Footer = () => {
       }}
       >
         {/* Footer */}
-        <Image className='w-full' src={footer} alt='footer' style={{height: "78px"}} />
+        <Image className='w-full' src={footer} alt='footer' style={{height: "110px", objectFit: "fill"}} />
       </div>
   )
 }

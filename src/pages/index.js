@@ -1,9 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import Link from 'next/link'
-import gv from "../../public/gv.jpg"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,26 +14,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main
-        className='text-2xl w-full h-full text-neutral-900'
-        style={{
-          // backgroundImage: `url(${"/concert.jpg"})`
-        }}
+        className='text-2xl w-full h-full text-neutral-950'
       >
-        {/* <Image
-          className='w-full z-0 absolute'
-          sizes='small'
-          src={gv}
-          alt='poster'
-          style={{zIndex: "0", height: "100%"}} 
-        /> */}
-        <h1 className='text-6xl my-4 bg-stone-200 w-fit opacity-60'>Welcome :)</h1>
+        <h1 className='text-6xl mb-4 bg-stone-200 w-fit opacity-60'>Welcome :)</h1>
         <div
           className='flex flex-col gap-4 text-4xl'
         >
-          <h2 className='bg-stone-200 w-fit opacity-60'>You can Search About <RenderLink name={"Songs"} path={"/search"} /> Or <RenderLink name={"Artists"} path={"/search"} /> </h2>
-          <h2 className='bg-stone-200 w-fit opacity-60'>You can See <RenderLink name={"Trending Songs"} path={"/top-tracks"} /> By Country, If You Are Signed In</h2>
-          <h2 className='bg-stone-200 w-fit opacity-60'>You can See Your Already Stored <RenderLink name={"Playlists"} path={"/playlists"} />, If You Are Signed In</h2>
-          <h2 className='bg-stone-200 w-fit opacity-60'>You can See Your <RenderLink name={"Dashboard"} path={"/dashboard"} />, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-70'>You can Search About <RenderLink name={"Songs"} path={"/search"} /> Or <RenderLink name={"Artists"} path={"/search"} /> </h2>
+          <h2 className='bg-stone-200 w-fit opacity-70'>You can See <RenderLink name={"Trending Songs"} path={"/top-tracks"} /> By Country, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-80'>You can See Your Already Stored <RenderLink name={"Playlists"} path={"/playlists"} />, If You Are Signed In</h2>
+          <h2 className='bg-stone-200 w-fit opacity-90'>You can See Your <RenderLink name={"Dashboard"} path={"/dashboard"} />, If You Are Signed In</h2>
         </div>
       </main>
     </>

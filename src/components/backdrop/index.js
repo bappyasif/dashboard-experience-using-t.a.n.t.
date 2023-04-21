@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import React from 'react'
-import gv from "../../../public/gv.jpg"
 
 export const BackdropImage = () => {
     return (

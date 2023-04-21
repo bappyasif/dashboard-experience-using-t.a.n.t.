@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { SessionProvider } from "next-auth/react";
 import { DashboardContextProvider } from '@/contexts';
-import { HeroContent } from '@/components/header';
-import { BackdropImage } from '@/components/backdrop';
 
 export default function App({ Component, pageProps }) {
   const clientQuery = new QueryClient()
@@ -23,8 +21,6 @@ export default function App({ Component, pageProps }) {
     <SessionProvider session={pageProps.session}>
       <DashboardContextProvider>
         <QueryClientProvider client={clientQuery}>
-          <BackdropImage />
-          <HeroContent />
           <div className='flex gap-9 w-full'>
             <Navbar />
             <Component {...pageProps} />

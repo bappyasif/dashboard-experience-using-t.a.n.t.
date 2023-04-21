@@ -16,7 +16,7 @@ export const Navbar = () => {
         const getPathName = router.pathname;
         const findName = navs.find(item => item.path === getPathName)
 
-        if(findName?.name) {
+        if (findName?.name) {
             handleActive(findName.name)
         }
         // console.log(findName, getPathName)
@@ -32,11 +32,9 @@ export const Navbar = () => {
     return (
         <nav
             className='flex flex-col gap-1 min-h-full z-10'
-            style={{
-                // backgroundImage: `url(${"/clouds.jpg"})`,
-                // backgroundImage: `url(${"/comm.jpg"})`,
-                minHeight: "100vh"
-            }}
+        // style={{
+        //     minHeight: "100vh"
+        // }}
         >
             {renderNavs()}
         </nav>
@@ -58,15 +56,9 @@ const RenderNav = ({ item, handleActive, activeNow }) => {
                 ${activeNow == name ? "bg-white" : "bg-zinc-400"} 
                 text-2xl p-2 pr-11 flex gap-2 items-center rounded-lg min-w-max
                 hover:bg-slate-${activeNow !== name ? "600" : ""} 
-                hover:text-${activeNow === name ? "" : "white"}
+                hover:${activeNow !== name ? "text-white" : ""}
                 `
-            }
-                // style={{
-                //     // backgroundImage: `url(${"/clouds.jpg"})`,
-                //     // backgroundImage: `url(${"/studio.jpg"})`,
-                //     backgroundSize: "cover",
-                //     backgroundRepeat: "no-repeat"
-                // }}
+                }
                 onClick={() => handleActive(name)}
             >
                 <span>{name}</span>
